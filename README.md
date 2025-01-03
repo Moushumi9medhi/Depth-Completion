@@ -12,14 +12,17 @@
     <br>   
   </p>
 <p align="center">
-    <img src="assets/IIT_Kharagpur_Logo.svg" alt="Logo" height="40">
+    <img src="assets/IIT_Kharagpur_Logo.svg.png" alt="Logo" height="60">
 </p>
-  <div align="center"></div>
+<p align="center">
+    <strong>IIT Kharagpur</strong>
 </p>
+
+---
+
 ## Code
 Code will be uploaded soon. For any pressing inquiries, contact: Moushumi Medhi @ [medhi.moushumi@iitkgp.ac.in](mailto:medhi.moushumi@iitkgp.ac.in)
 
----
 
 ## Features
 - **Depth Completion**
