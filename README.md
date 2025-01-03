@@ -31,6 +31,9 @@ This repository hosts the source code for unguided single-depth map completion o
 - Generalization capability across various indoor depth datasets without additional fine-tuning.
 - Adaptable to existing works, supporting diverse computer vision applications.
 
+## BibTeX Citation
+
+The BibTeX citation will be provided soon.
 
 1. __A dataset__: multi-sensor data streams captured by AR devices and laser scanners
 2. __scantools__: a processing pipeline to register different user sessions together
