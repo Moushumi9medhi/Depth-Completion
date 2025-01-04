@@ -42,7 +42,7 @@ postprocessing.
 - With only a maximum of 1.8 million parameters, our model is edge-friendly and compact.
 - Generalization capability across various indoor depth datasets without additional fine-tuning.
 - Adaptable to existing works, supporting diverse computer vision applications.
-
+![Teaser Image](assets/teaser.png)
 ## 🎓 BibTeX Citation
 
 The BibTeX citation will be provided soon.
@@ -77,13 +77,20 @@ We introduce a new data format, called *Capture*, to handle multi-session and mu
 ## 🙏 Acknowledgement
 
 We thank the anonymous reviewers for their constructive reviews. 
-## Usage
+## Installation and Running
 ### Prerequisites
 1. Install `torch`: http://torch.ch/docs/getting-started.html
 ..............MATIO
 ```shell
 luarocks install cv
 ```
+**Dependencies**
+
+- [Torch7](http://torch.ch/docs/getting-started.html)
+- [nn](https://github.com/torch/nn)
+- [image](https://github.com/torch/image)
+  
+The packages of `nn`, `image`, and `nngraph` should be a part of a standard Torch7 install.
 2. Clone the repository
   ```Shell
   git clone https://github.com/Moushumi9medhi/Depth-Completion.git
@@ -92,9 +99,16 @@ luarocks install cv
 3. Run the following single command in your terminal to download the pretrained model:
 
 ```bash
-bash -c "$(wget -qO- https://your-script-url.com/download_model.sh)"
+bash download_model.sh
 # It will download the pre-trained model into the `models` directory.
 ```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ We have released the following two models:
+- `completionnet_places2_freeform.t7`: An image completion model trained with free-form holes on the [Places2 dataset](http://places2.csail.mit.edu/), which will work better than the model trained with rectangular holes, even without post-processing. We used a part of the [context encoder [Pathak et al. 2016]](https://github.com/pathak22/context-encoder) implementation to generate the random free-form holes for training.
+- `completionnet_celeba.t7`: A face completion model trained with rectangular holes on the [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). This model was trained on face images with the smallest edges in the [160, 178], and thus it will work best on images of similar sizes.
+
+These models can be downloaded via `download_model.sh`.
+
 ### Training
 1. Choose a RGB-Depth dataset and create a folder with its name (ex: `mkdir celebA`). Inside this folder create a folder `images` containing your images.  .....swee how training  image folder was created...............check this........not right.....
 
@@ -115,12 +129,27 @@ bash -c "$(wget -qO- https://your-script-url.com/download_model.sh)"
 ```
 DATA_ROOT=celebA th data/crop_celebA.lua
 ```
-
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- The Places models were trained on the [Places2 dataset](http://places2.csail.mit.edu/) and thus best performance is for natural outdoor images.
+- While the Places2 models work on images of any size with arbitrary holes, we trained them on images with the smallest edges in the [256, 384] pixel range and random holes in the [96, 128] pixel range. Our models will work best on images with holes of those sizes.
+- Significantly large holes or extrapolation when the holes are at the border of images may fail to be filled in due to limited spatial support of the model.
+xxxxxxxxxxxxxxxxxxxxxxxxx
+1. Make the dataset folder.
+  ```Shell
+  mkdir -p /path_to_wherever_you_want/mydataset/train/images/
+  # put all training images inside mydataset/train/images/
+  mkdir -p /path_to_wherever_you_want/mydataset/val/images/
+  # put all val images inside mydataset/val/images/
+  cd context-encoder/
+  ln -sf /path_to_wherever_you_want/mydataset dataset
+  ```
 2. Train the unguided indoor depth completion model in order to obtain a discriminator network and a generator network. I have already trained the model on the [celebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html).... and put the corresponding networks into the `checkpoints` folder. If you want to train it again or use a different dataset run
 ```
 DATA_ROOT=<dataset_folder> name=<whatever_name_you_want> th main.lua
 ```
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Inpainting using context encoder trained jointly with reconstruction and adversarial loss.
+XXXXXXXXXXXXXXXXXXXXX
 Train the model
   ```Shell
   # Train your own pixel interpolation model
@@ -128,6 +157,13 @@ Train the model
   DATA_ROOT=../dataset/my_train_set name=pixel niter=250 loadSize=96 fineSize=64 display=1 display_iter=50 gpu=1 th train.lua
   ```
   xxxxxxxxxxxxxxxxxxxxxxxxxxx
+  
+First, download the models by running the download script:
+
+```
+bash download_model.sh
+```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
   Train the model
   ```Shell
   # Train your own image deblurring model
@@ -141,6 +177,14 @@ Train the model
   cd denoising
   DATA_ROOT=../dataset/my_train_set name=denoise niter=1500 loadSize=96 fineSize=64 display=1 display_iter=50 gpu=1 th train.lua
   ```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  ```Shell
+  DATA_ROOT=dataset/train display_id=11 name=inpaintCenter overlapPred=4 wtl2=0.999 nBottleneck=4000 niter=500 loadSize=350 fineSize=128 gpu=1 th train.lua
+  ```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  net=models/inpaintCenter/paris_inpaintCenter.t7 name=paris_result imDir=images/paris overlapPred=4 manualSeed=222 batchSize=21 gpu=1 th demo.lua
+  net=models/inpaintCenter/imagenet_inpaintCenter.t7 name=imagenet_result imDir=images/imagenet overlapPred=0 manualSeed=222 batchSize=21 gpu=1 th demo.lua
+  net=models/inpaintCenter/paris_inpaintCenter.t7 name=ucberkeley_result imDir=images/ucberkeley overlapPred=4 manualSeed=222 batchSize=4 gpu=1 th demo.lua
 ### Inference
 1. Complete your images. You may want to choose another dataset to avoid completing images you used for training.
 ```
@@ -169,6 +213,15 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   # on client side, open in browser: http://localhost:8000/
   # You can then see the training progress in your browser window.
   ```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Install Display Package as follows. If you don't want to install it, then set `display=0` in `train.lua`.
+  ```Shell
+  luarocks install https://raw.githubusercontent.com/szym/display/master/display-scm-0.rockspec
+  cd ~
+  th -ldisplay.start 8000
+  # if working on server machine create tunnel: ssh -f -L 8000:localhost:8000 -N server_address.com
+  # on client side, open in browser: http://localhost:8000/
+  ```
 ### Optional parameters
 
 In your command line instructions you can specify several parameters (for example the display port number), here are some of them:
@@ -178,6 +231,15 @@ In your command line instructions you can specify several parameters (for exampl
 + `gpu` specifies if the computations are done on the GPU or not. Set it to 0 to use the CPU (not recommended, see below) and to n to use the nth GPU you have (1 is the default value)
 + `lr` is the learning rate
 + `loadSize` is the size to use to scale the images. 0 means no rescale
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Other options:
+
+- `--model`: Model to be used. Defaults to 'completionnet_places2_freeform.t7'.
+- `--gpu`: Use GPU for the computation. [cunn](https://github.com/torch/cunn) is required to use this option. Defaults to false.
+- `--maxdim`: Long edge dimension of the input image. Defaults to 600.
+- `--postproc`: Perform the post-processing. Defaults to false. If you fail to install the `torch-opencv`, do not use this option to avoid using the package.
+
+For example:
 
 ### Demo
 If you want to run a quick demo for the four image restoration tasks, please download our pre-trained models using the following script.
@@ -227,134 +289,27 @@ Denoising/DB11 contains 11 classic images commonly used to evaluate image denois
   img_path=DB11/Lena.png name=denoise net=../models/denoise_anysize_net_G.t7 sigma=25 stepSize=3 gpu=1 th denoise.lua
   # Denoising results saved as denoise.png
   ```
+
+xxxxxxxxxxxxxxxxxxxxxxxx
+
+```
+th inpaint.lua --input example.png --mask example_mask.png
+```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  ```Shell
+  # you can either use demo.lua to display the result or use test.lua using following commands:
+  DATA_ROOT=dataset/val net=checkpoints/inpaintCenter_500_net_G.t7 name=test_patch overlapPred=4 manualSeed=222 batchSize=30 loadSize=350 gpu=1 th test.lua
+  DATA_ROOT=dataset/val net=checkpoints/inpaintCenter_500_net_G.t7 name=test_full overlapPred=4 manualSeed=222 batchSize=30 loadSize=129 gpu=1 th test.lua
+  ```
 ## 📜 License
 This project is licensed under the The MIT License (MIT).
 
 ---
 
 **For any queries, feel free to raise an issue or contact us directly via [email](mailto:medhi.moushumi@iitkgp.ac.in).**
-222222222222222222222222222222 start
-# [Globally and Locally Consistent Image Completion](http://iizuka.cs.tsukuba.ac.jp/projects/completion/)
+2222222222222222222222 start
 
-[Satoshi Iizuka](http://iizuka.cs.tsukuba.ac.jp/index_eng.html), [Edgar Simo-Serra](https://esslab.jp/~ess/), [Hiroshi Ishikawa](http://www.f.waseda.jp/hfs/indexE.html)
-
-![Teaser Image](teaser.png)
-
-## News
-**09/17/2020 Update:** We have released the following two models:
-- `completionnet_places2_freeform.t7`: An image completion model trained with free-form holes on the [Places2 dataset](http://places2.csail.mit.edu/), which will work better than the model trained with rectangular holes, even without post-processing. We used a part of the [context encoder [Pathak et al. 2016]](https://github.com/pathak22/context-encoder) implementation to generate the random free-form holes for training.
-- `completionnet_celeba.t7`: A face completion model trained with rectangular holes on the [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). This model was trained on face images with the smallest edges in the [160, 178], and thus it will work best on images of similar sizes.
-
-These models can be downloaded via `download_model.sh`.
-
-## Overview
-
-This code provides an implementation of the research paper:
-
-```
-  "Globally and Locally Consistent Image Completion"
-  Satoshi Iizuka, Edgar Simo-Serra, and Hiroshi Ishikawa
-  ACM Transaction on Graphics (Proc. of SIGGRAPH 2017), 2017
-```
-We learn to inpaint missing regions with a deep convolutional network.
-Our network completes images of arbitrary resolutions by filling in
-missing regions of any shape. We use global and local context discriminators
-to train the completion network to provide both locally and globally consistent results.
-See our [project page](http://iizuka.cs.tsukuba.ac.jp/projects/completion/) for more detailed information.
-
-## License
-
-```
-  Copyright (C) <2017> <Satoshi Iizuka, Edgar Simo-Serra, Hiroshi Ishikawa>
-
-  This work is licensed under the Creative Commons
-  Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy
-  of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or
-  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
-
-  Satoshi Iizuka, University of Tsukuba
-  iizuka@cs.tsukuba.ac.jp, http://iizuka.cs.tsukuba.ac.jp/index_eng.html
-  
-  Edgar Simo-Serra, Waseda University
-  ess@waseda.jp, https://esslab.jp/~ess/
-```
-
-
-## Dependencies
-
-- [Torch7](http://torch.ch/docs/getting-started.html)
-- [nn](https://github.com/torch/nn)
-- [image](https://github.com/torch/image)
-- [nngraph](https://github.com/torch/nngraph)
-- [torch-opencv](https://github.com/VisionLabs/torch-opencv) (optional, required for post-processing)
-
-The packages of `nn`, `image`, and `nngraph` should be a part of a standard Torch7 install.
-For information on how to install Torch7 please see the [official torch documentation](http://torch.ch/docs/getting-started.html)
-on the subject. The `torch-opencv` is OpenCV bindings for LuaJit+Torch, which can be installed via 
-`luarocks install cv` after installing OpenCV 3.1. Please see the [instruction page](https://github.com/VisionLabs/torch-opencv/wiki/Installation) for more detailed information.
-
-**17/09/2020 Note:** If you fail to install Torch7 with current GPUs, please try the [self-contained Torch installation repository (unofficial)]( https://github.com/nagadomi/distro) by [@nadadomi](https://github.com/nagadomi), which supports CUDA10.1, Volta, and Turing.
-
-## Usage
-
-First, download the models by running the download script:
-
-```
-bash download_model.sh
-```
-
-Basic usage is:
-
-```
-th inpaint.lua --input <input_image> --mask <mask_image>
-```
-The mask is a binary image (1 for pixels to be completed, 0 otherwise) and should be the same size as the input image. If the mask is not specified, a mask with randomly generated holes will be used.
-
-Other options:
-
-- `--model`: Model to be used. Defaults to 'completionnet_places2_freeform.t7'.
-- `--gpu`: Use GPU for the computation. [cunn](https://github.com/torch/cunn) is required to use this option. Defaults to false.
-- `--maxdim`: Long edge dimension of the input image. Defaults to 600.
-- `--postproc`: Perform the post-processing. Defaults to false. If you fail to install the `torch-opencv`, do not use this option to avoid using the package.
-
-For example:
-
-```
-th inpaint.lua --input example.png --mask example_mask.png
-```
-
-### Best Performance
-
-- The Places models were trained on the [Places2 dataset](http://places2.csail.mit.edu/) and thus best performance is for natural outdoor images.
-- While the Places2 models work on images of any size with arbitrary holes, we trained them on images with the smallest edges in the [256, 384] pixel range and random holes in the [96, 128] pixel range. Our models will work best on images with holes of those sizes.
-- Significantly large holes or extrapolation when the holes are at the border of images may fail to be filled in due to limited spatial support of the model.
-
-### Notes
-
-- This is developed on a Linux machine running Ubuntu 16.04 during late 2016.
-- Provided model and sample code is under a non-commercial creative commons license.
-
-## Citing
-
-If you use this code please cite:
-
-```
-@Article{IizukaSIGGRAPH2017,
-  author = {Satoshi Iizuka and Edgar Simo-Serra and Hiroshi Ishikawa},
-  title = {{Globally and Locally Consistent Image Completion}},
-  journal = "ACM Transactions on Graphics (Proc. of SIGGRAPH)",
-  year = 2017,
-  volume = 36,
-  number = 4,
-  pages = 107:1--107:14,
-  articleno = 107,
-}
-```
-
-
-
-
-2222222222222222222222222222 end
+22222222222222222222222222222 end
 mmmmmmmmmmmmmmmmmmmmmmmmmm start
 <!-- # magic-edit.github.io -->
 
