@@ -79,7 +79,9 @@ We introduce a new data format, called *Capture*, to handle multi-session and mu
 We thank the anonymous reviewers for their constructive reviews. 
 ## Prerequisite
 1. Install Torch:  http://torch.ch/docs/getting-started.html#_
-
+```shell
+luarocks install cv
+```
 2. Clone the repository
   ```Shell
   git clone https://github.com/Moushumi9medhi/Depth-Completion.git
