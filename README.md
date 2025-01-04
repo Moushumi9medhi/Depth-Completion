@@ -77,13 +77,74 @@ We introduce a new data format, called *Capture*, to handle multi-session and mu
 ## 🙏 Acknowledgement
 
 We thank the anonymous reviewers for their constructive reviews. 
-## Usage
+## Prerequisite
 1. Install Torch:  http://torch.ch/docs/getting-started.html#_
 
 2. Clone the repository
   ```Shell
   git clone https://github.com/Moushumi9medhi/Depth-Completion.git
+  cd Depth-Completion
   ```
+
+Run the following single command in your terminal to download the pretrained model:
+
+```bash
+bash -c "$(wget -qO- https://your-script-url.com/download_model.sh)"
+# It will download the pre-trained model into the `models` directory.
+```
+
+MODEL DOWN STARTTTTTTTTTTTTTTTTTTTTTT
+
+## Script Details
+
+For reference, the `download_model.sh` script performs the following steps:
+
+1. Downloads the model file from Dropbox.
+2. Checks if the file is a valid `.zip` file.
+3. Extracts the contents into a directory named `model_files`.
+
+The script will also handle errors such as failed downloads or missing tools.
+
+---
+
+## Troubleshooting
+
+If you encounter any issues, refer to the solutions below:
+
+- **Missing Tools**: Install `wget` and `unzip` as described in the prerequisites section.
+- **Failed Download**: Verify the Dropbox link or check your internet connection.
+- **Failed Extraction**: Ensure that the downloaded file is a valid `.zip` file.
+
+---
+
+## License and Disclaimer
+
+This script is provided as-is for research and educational purposes. The author is not responsible for any issues caused by running this script.
+```
+
+### Key Points:
+- This approach removes unnecessary steps and directly provides a command to execute the script.
+- Make sure you host your script (`download_model.sh`) on a URL (e.g., GitHub, Dropbox, or your server) and replace `https://your-script-url.com/download_model.sh` with the actual link. 
+
+This makes the process much easier for users!
+MODEL DOWN ENDDDDDDDDDDDDDDDDDDD
+3. Demo...............................change this heading
+  ```Shell
+ 
+  bash ./models/scripts/download_inpaintCenter_models.sh
+  # This will populate the `./models/` folder with trained models.
+ ```
+
+Before running the script, make sure the following tools are installed on your system:
+
+- **`wget`**: For downloading files.
+- **`unzip`**: For extracting `.zip` files.
+
+You can install these tools on Ubuntu/Debian-based systems using:
+
+```bash
+sudo apt-get install wget unzip
+```
 ## 📜 License
 This project is licensed under the The MIT License (MIT).
 
@@ -166,13 +227,6 @@ Download our MagicAnimate [checkpoints](https://huggingface.co/zcxu-eric/MagicAn
 
 
 
-
-  
-3. Demo
-  ```Shell
-  cd context-encoder
-  bash ./models/scripts/download_inpaintCenter_models.sh
-  # This will populate the `./models/` folder with trained models.
 
   net=models/inpaintCenter/paris_inpaintCenter.t7 name=paris_result imDir=images/paris overlapPred=4 manualSeed=222 batchSize=21 gpu=1 th demo.lua
   net=models/inpaintCenter/imagenet_inpaintCenter.t7 name=imagenet_result imDir=images/imagenet overlapPred=4 manualSeed=222 batchSize=21 gpu=1 th demo.lua
