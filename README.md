@@ -301,6 +301,42 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   DATA_ROOT=dataset/val net=checkpoints/inpaintCenter_500_net_G.t7 name=test_patch overlapPred=4 manualSeed=222 batchSize=30 loadSize=350 gpu=1 th test.lua
   DATA_ROOT=dataset/val net=checkpoints/inpaintCenter_500_net_G.t7 name=test_full overlapPred=4 manualSeed=222 batchSize=30 loadSize=129 gpu=1 th test.lua
   ```
+
+## Benchmark
+
+We evaluate the performance of multiple state-of-the-art and popular stereo matching methods, both for standard and 360° images. All models are trained on a single NVIDIA A100 GPU with
+the largest possible batch size to ensure comparable use of computational resources.
+
+| Method             | Type           | Disp-MAE (°) | Disp-RMSE (°) | Disp-MARE | Depth-MAE (m) | Depth-RMSE (m) | Depth-MARE |
+|--------------------|----------------|--------------|---------------|-----------|---------------|----------------|----------------|
+| [PSMNet](https://arxiv.org/abs/1803.08669)           | Stereo        | 0.33         | 0.54          | 0.20      | 2.79          | 6.17           | 0.29           |
+| [360SD-Net](https://arxiv.org/abs/1911.04460)        | 360° Stereo   | 0.21         | 0.42          | 0.18      | 2.14          | 5.12           | 0.15           |
+| [IGEV-Stereo](https://arxiv.org/abs/2303.06615)      | Stereo        | 0.22         | 0.41          | 0.17      | 1.85          | 4.44           | 0.15           |
+| [360-IGEV-Stereo](https://arxiv.org/abs/2411.18335)    | 360° Stereo   | **0.18**     | **0.39**      | **0.15**  | **1.77**      | **4.36**       | **0.14**       |
+
+
+Download and save the `pretrained model` to `./checkpoints`
+
+| Pretrained Model                                                                                    | Blocks    | Channels | Drop rate |
+| --------------------------------------------------------------------------------------------------- |:-------:|:--------:|:-------:|
+| [SPNet-Tiny](https://drive.google.com/file/d/1ivmCX-i9lej4uJhT0Yyk2Nq9ZmoQlsB9/view?usp=drive_link)    | [3,3,9,3]  | [96,192,384,768]    | 0.0  |
+| [SPNet-Small](https://drive.google.com/file/d/1Ba-W3oX62lCjx5MvvGkn91LXP6SuCnV6/view?usp=drive_link)   | [3,3,27,3] | [96,192,384,768]    | 0.1  | 
+| [SPNet-Base](https://drive.google.com/file/d/1B9uPRVPGm1F8F-isVDVzEdHgxXmp43hn/view?usp=drive_link)    | [3,3,27,3] | [128,256,512,1024]  | 0.1  | 
+| [SPNet-Large](https://drive.google.com/file/d/11dujPviL4pKLEXytXK0mEmPBNQDqgEak/view?usp=drive_link)   | [3,3,27,3] | [192,384,768,1536]  | 0.2  | 
+
+Run `test.py`
+
+```python
+# SPNet-Tiny
+python test.py --dims=[3,3,9,3] --depths=[96,192,384,768] --dp_rate=0.0 --model_dir='checkpoints/Tiny.pth'
+# SPNet-Small
+python test.py --dims=[3,3,27,3] --depths=[96,192,384,768] --dp_rate=0.1 --model_dir='checkpoints/Small.pth'
+# SPNet-Base
+python test.py --dims=[3,3,27,3] --depths=[128,256,512,1024] --dp_rate=0.1 --model_dir='checkpoints/Base.pth'
+# SPNet-Large
+python test.py --dims=[3,3,27,3] --depths=[192,384,768,1536] --dp_rate=0.2 --model_dir='checkpoints/Large.pth'
+```
+
 ## 📜 License
 This project is licensed under the The MIT License (MIT).
 
@@ -308,6 +344,126 @@ This project is licensed under the The MIT License (MIT).
 
 **For any queries, feel free to raise an issue or contact us directly via [email](mailto:medhi.moushumi@iitkgp.ac.in).**
 2222222222222222222222 start
+
+### Results
+Quanlitative Evaluation On NYU online test dataset
+
+<img src="./results/NYU.png" width = "536" height = "300" alt="NYU" />
+
+Quantitative Evaluation On NYU online test dataset
+
+<img src="./results/NYU_results.jpg" width = "556" height = "336" alt="NYU_table" />
+
+Quanlitative Evaluation On KITTI online test dataset
+
+<img src="./results/KITTI.png" width = "930" height = "530" alt="KITTI" />
+
+Quantitative Evaluation On KITTI online test dataset
+
+<img src="./results/KITTI_results.jpg" width = "600" height = "400" alt="KITTI_table" />
+
+
+### Enviroment Config
+- pytorch=1.11 CUDA=11.6 python=3.9
+- pip install einops tqdm matplotlib numpy opencv-python pandas scikit-image scikit-learn h5py
+#### NVIDIA Apex
+
+We used NVIDIA Apex for multi-GPU training.
+
+Apex can be installed as follows:
+
+```bash
+$ cd PATH_TO_INSTALL
+$ git clone https://github.com/NVIDIA/apex
+$ cd apex
+$ pip install -v --no-cache-dir ./ 
+```
+
+#### Dataset
+
+We used NYU Depth V2 (indoor) and KITTI Depth Completion datasets for training and evaluation.
+
+#### NYU Depth V2 
+
+download NYU Depth Dataset 
+```bash
+$ cd PATH_TO_DOWNLOAD
+$ wget http://datasets.lids.mit.edu/sparse-to-dense/data/nyudepthv2.tar.gz
+$ tar -xvf nyudepthv2.tar.gz
+```
+
+#### KITTI Depth Completion (KITTI DC)
+
+KITTI DC dataset get from the [KITTI DC Website](http://www.cvlibs.net/datasets/kitti/eval_depth.php?benchmark=depth_completion).
+
+For KITTI Raw dataset is get from the [KITTI Raw Website](http://www.cvlibs.net/datasets/kitti/raw_data.php).
+
+```bash
+$ cd NLSPN_ROOT/utils
+$ python prepare_KITTI_DC.py --path_root_dc PATH_TO_KITTI_DC --path_root_raw PATH_TO_KITTI_RAW
+```
+To get the train and test data, and the data structure as follows:
+
+```
+.
+├── depth_selection
+│    ├── test_depth_completion_anonymous
+│    │    ├── image
+│    │    ├── intrinsics
+│    │    └── velodyne_raw
+│    ├── test_depth_prediction_anonymous
+│    │    ├── image
+│    │    └── intrinsics
+│    └── val_selection_cropped
+│        ├── groundtruth_depth
+│        ├── image
+│        ├── intrinsics
+│        └── velodyne_raw
+├── train
+│    ├── 2011_09_26_drive_0001_sync
+│    │    ├── image_02
+│    │    │     └── data
+│    │    ├── image_03
+│    │    │     └── data
+│    │    ├── oxts
+│    │    │     └── data
+│    │    └── proj_depth
+│    │        ├── groundtruth
+│    │        └── velodyne_raw
+│    └── ...
+└── val
+    ├── 2011_09_26_drive_0002_sync
+    └── ...
+```
+
+#### Training
+
+```bash
+$ cd SDformer/src
+
+# for NYU Depth v2 dataset training
+$ python main.py --gpus 0,1  --epochs 25 --batch_size 8 --save NYU
+
+# for KITTI Depth Completion dataset training
+$ python main.py --gpus 0,1 --epochs 20 --batch_size 4 --test_crop --save KITTI
+```
+
+#### Testing
+
+```bash
+$ cd SDformer/src
+
+$ python main.py --test_only --pretrain pretrain-path --save test_on_NYU
+
+$ python main.py --test_only --pretrain pretrain-path --save test_on_KITTI
+```
+
+KITTI DC Online evaluation data:
+
+```bash
+$ cd SDformer/src
+$ python main.py --split_json ../data_json/kitti_dc_test.json --test_only --pretrain pretrain --save_image --save_result_only --save online_kitti
+```
 
 22222222222222222222222222222 end
 mmmmmmmmmmmmmmmmmmmmmmmmmm start
