@@ -77,6 +77,7 @@ We introduce a new data format, called *Capture*, to handle multi-session and mu
 ## 🙏 Acknowledgement
 
 We thank the anonymous reviewers for their constructive reviews. 
+The training code is adapted from an initial fork of [Soumith's DCGAN](https://github.com/soumith/dcgan.torch) implementation.
 ## Installation and Running
 ### Prerequisites
 1. Install `torch`: http://torch.ch/docs/getting-started.html
@@ -85,12 +86,27 @@ We thank the anonymous reviewers for their constructive reviews.
 luarocks install cv
 ```
 **Dependencies**
+Ensure you have Torch7 installed along with the following required packages:
 
-- [Torch7](http://torch.ch/docs/getting-started.html)
-- [nn](https://github.com/torch/nn)
-- [image](https://github.com/torch/image)
-  
-The packages of `nn`, `image`, and `nngraph` should be a part of a standard Torch7 install.
+```lua
+require 'nn'
+require 'optim'
+require 'image'
+require 'cunn'
+require 'autograd'
+require 'torch'
+require 'ffi'
+require('pl.class')
+Other dependencies required:
+- `cunn`
+- `optim`
+- `autograd`
+- `threads`
+
+Install the `matio` package using the following command:
+```bash
+luarocks install --server=https://luarocks.org/dev matio 
+
 2. Clone the repository
   ```Shell
   git clone https://github.com/Moushumi9medhi/Depth-Completion.git
@@ -108,7 +124,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 - `completionnet_celeba.t7`: A face completion model trained with rectangular holes on the [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). This model was trained on face images with the smallest edges in the [160, 178], and thus it will work best on images of similar sizes.
 
 These models can be downloaded via `download_model.sh`.
-
+XXXXXXXXXXXXXXXXXXXXX
+Use the provided `download_model.sh` script to download the pre-trained model. Simply run:
+```bash
+bash download_model.sh
+```
 ### Training
 1. Choose a RGB-Depth dataset and create a folder with its name (ex: `mkdir celebA`). Inside this folder create a folder `images` containing your images.  .....swee how training  image folder was created...............check this........not right.....
 
@@ -363,107 +383,6 @@ Quantitative Evaluation On KITTI online test dataset
 <img src="./results/KITTI_results.jpg" width = "600" height = "400" alt="KITTI_table" />
 
 
-### Enviroment Config
-- pytorch=1.11 CUDA=11.6 python=3.9
-- pip install einops tqdm matplotlib numpy opencv-python pandas scikit-image scikit-learn h5py
-#### NVIDIA Apex
-
-We used NVIDIA Apex for multi-GPU training.
-
-Apex can be installed as follows:
-
-```bash
-$ cd PATH_TO_INSTALL
-$ git clone https://github.com/NVIDIA/apex
-$ cd apex
-$ pip install -v --no-cache-dir ./ 
-```
-
-#### Dataset
-
-We used NYU Depth V2 (indoor) and KITTI Depth Completion datasets for training and evaluation.
-
-#### NYU Depth V2 
-
-download NYU Depth Dataset 
-```bash
-$ cd PATH_TO_DOWNLOAD
-$ wget http://datasets.lids.mit.edu/sparse-to-dense/data/nyudepthv2.tar.gz
-$ tar -xvf nyudepthv2.tar.gz
-```
-
-#### KITTI Depth Completion (KITTI DC)
-
-KITTI DC dataset get from the [KITTI DC Website](http://www.cvlibs.net/datasets/kitti/eval_depth.php?benchmark=depth_completion).
-
-For KITTI Raw dataset is get from the [KITTI Raw Website](http://www.cvlibs.net/datasets/kitti/raw_data.php).
-
-```bash
-$ cd NLSPN_ROOT/utils
-$ python prepare_KITTI_DC.py --path_root_dc PATH_TO_KITTI_DC --path_root_raw PATH_TO_KITTI_RAW
-```
-To get the train and test data, and the data structure as follows:
-
-```
-.
-├── depth_selection
-│    ├── test_depth_completion_anonymous
-│    │    ├── image
-│    │    ├── intrinsics
-│    │    └── velodyne_raw
-│    ├── test_depth_prediction_anonymous
-│    │    ├── image
-│    │    └── intrinsics
-│    └── val_selection_cropped
-│        ├── groundtruth_depth
-│        ├── image
-│        ├── intrinsics
-│        └── velodyne_raw
-├── train
-│    ├── 2011_09_26_drive_0001_sync
-│    │    ├── image_02
-│    │    │     └── data
-│    │    ├── image_03
-│    │    │     └── data
-│    │    ├── oxts
-│    │    │     └── data
-│    │    └── proj_depth
-│    │        ├── groundtruth
-│    │        └── velodyne_raw
-│    └── ...
-└── val
-    ├── 2011_09_26_drive_0002_sync
-    └── ...
-```
-
-#### Training
-
-```bash
-$ cd SDformer/src
-
-# for NYU Depth v2 dataset training
-$ python main.py --gpus 0,1  --epochs 25 --batch_size 8 --save NYU
-
-# for KITTI Depth Completion dataset training
-$ python main.py --gpus 0,1 --epochs 20 --batch_size 4 --test_crop --save KITTI
-```
-
-#### Testing
-
-```bash
-$ cd SDformer/src
-
-$ python main.py --test_only --pretrain pretrain-path --save test_on_NYU
-
-$ python main.py --test_only --pretrain pretrain-path --save test_on_KITTI
-```
-
-KITTI DC Online evaluation data:
-
-```bash
-$ cd SDformer/src
-$ python main.py --split_json ../data_json/kitti_dc_test.json --test_only --pretrain pretrain --save_image --save_result_only --save online_kitti
-```
 
 22222222222222222222222222222 end
 mmmmmmmmmmmmmmmmmmmmmmmmmm start
