@@ -45,6 +45,7 @@ Some part of the training code is adapted from an initial fork of [Soumith's DCG
 ## Installation and Running
 ### Prerequisites
 1. Install torch: http://torch.ch/docs/getting-started.html
+   
 Install the `matio` package using the following command:
 ```bash
 luarocks install --server=https://luarocks.org/dev matio 
