@@ -61,16 +61,7 @@ This codebase is composed of the following modules:
 - <a href="#processing-pipeline">`scantools`</a>: data API, processing tools and pipeline
 - [ScanCapture](apps/ScanCapture_iOS): a data recording app for Apple devices
 
-## Data format
 
-We introduce a new data format, called *Capture*, to handle multi-session and multi-sensor data recorded by different devices. A Capture object corresponds to a capture location. It is composed of multiple sessions and each of them corresponds to a data recording by a given device. Each sessions stores the raw sensor data, calibration, poses, and all assets generated during the processing.
-
-
-
-## Directory Structure
-
-- `server`: contains server-side code and relevant information for reproducing the server-side experimental results.
-- `client`: contains an Unity3D-based application. This application was developed using LitAR client/server APIs, and can be used for reproducing the remaining experimental results.
 
 
 
@@ -161,6 +152,41 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         ├── <timestamp>.png     # as 16b PNG
         └── ...
     ```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+We used preprocessed NYUv2 HDF5 dataset provided by [Fangchang Ma](https://github.com/fangchangma/sparse-to-dense).
+
+```bash
+$ cd PATH_TO_DOWNLOAD
+$ wget http://datasets.lids.mit.edu/sparse-to-dense/data/nyudepthv2.tar.gz
+$ tar -xvf nyudepthv2.tar.gz
+```
+
+After that, you will get a data structure as follows:
+
+```
+nyudepthv2
+├── train
+│    ├── basement_0001a
+│    │    ├── 00001.h5
+│    │    └── ...
+│    ├── basement_0001b
+│    │    ├── 00001.h5
+│    │    └── ...
+│    └── ...
+└── val
+    └── official
+        ├── 00001.h5
+        └── ...
+```
+
+Download the  that the original full NYUv2 dataset is available at the [official website](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html).
+
+After preparing the dataset, you should generate a json file containing paths to individual images.
+
+```bash
+$ cd THIS_PROJECT_ROOT/utils
+$ python generate_json_NYUDepthV2.py --path_root PATH_TO_NYUv2
+```
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 - The Places models were trained on the [Places2 dataset](http://places2.csail.mit.edu/) and thus best performance is for natural outdoor images.
@@ -444,159 +470,11 @@ Quantitative Evaluation On KITTI online test dataset
         └── ...
     ```
 
-Models provided in this repo were trained on the VOID dataset. 
-1) Download the VOID dataset following [the instructions in the VOID dataset repo](https://github.com/alexklwong/void-dataset#downloading-void).
-
-
-<!-- PROJECT LOGO -->
-
-<p align="center">
-
-  <h1 align="center">CompletionFormer: Depth Completion with Convolutions and Vision Transformers</h1>
-  <p align="center">
-    <a href="https://youmi-zym.github.io"><strong>Youmin Zhang</strong></a>
-    ·
-    <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=jPvOqgYAAAAJ"><strong>Xianda Guo</strong></a>
-    ·
-    <a href="https://mattpoggi.github.io/"><strong>Matteo Poggi</strong></a>
-    <br>
-    <a href="http://www.zhengzhu.net/"><strong>Zheng Zhu</strong></a>
-    ·
-    <a href=""><strong>Guan Huang</strong></a>
-    ·
-    <a href="http://vision.deis.unibo.it/~smatt/Site/Home.html"><strong>Stefano Mattoccia</strong></a>
-  </p>
-  <h3 align="center"><a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Zhang_CompletionFormer_Depth_Completion_With_Convolutions_and_Vision_Transformers_CVPR_2023_paper.pdf">Paper</a> | <a href="https://www.youtube.com/watch?v=SLKAwrY2qjg&t=111s">Video</a> | <a href="https://youmi-zym.github.io/projects/CompletionFormer">Project Page</a></h3>
-  <div align="center"></div>
-</p>
-<p align="center">
-  <a href="https://youmi-zym.github.io/projects/CompletionFormer">
-    <img src="./media/architecture.png" alt="Logo" width="98%">
-  </a>
-</p>
-<p align="center">
-<strong>CompletionFormer</strong>, enabling both local and global propagation for depth completion.
-</p>
 
 ## ⚙️ Setup
 
-Assuming a fresh [Anaconda](https://www.anaconda.com/download/) distribution, you can install the dependencies with:
-```shell
-conda create -n completionformer python=3.8
-conda activate completionformer
-# For CUDA Version == 11.3
-pip install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113
-pip install mmcv-full==1.4.4 mmsegmentation==0.22.1  
-pip install timm tqdm thop tensorboardX opencv-python ipdb h5py ipython Pillow==9.5.0 
-```
-We ran our experiments with PyTorch 1.10.1, CUDA 11.3, Python 3.8 and Ubuntu 20.04.
-
-<!-- We recommend using a [conda environment](https://conda.io/docs/user-guide/tasks/manage-environments.html) to avoid dependency conflicts. -->
-
-#### Docker
-
-You can get started with docker by making sure you're default runtime is set to nvidia-container-runtime
-
-```bash
-# /etc/docker/daemon.json
-{
-    "runtimes": {
-        "nvidia": {
-            "path": "/usr/bin/nvidia-container-runtime",
-            "runtimeArgs": []
-         } 
-    },
-    "default-runtime": "nvidia" 
-}
-```
-
-Then you can build the image along with the DCNv2 cuda kernels with:
-
-```bash
-docker build -t completionformer:latest .
-# run container
-docker run --rm -it --gpus all completionformer
-```
-
-#### NVIDIA Apex
-
-We used NVIDIA Apex (commit @ 4ef930c1c884fdca5f472ab2ce7cb9b505d26c1a) for multi-GPU training.
-
-Apex can be installed as follows:
-
-```bash
-$ cd PATH_TO_INSTALL
-$ git clone https://github.com/NVIDIA/apex
-$ cd apex
-$ git reset --hard 4ef930c1c884fdca5f472ab2ce7cb9b505d26c1a
-$ pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ 
-```
-
-
-#### Deformable Convolution V2 (DCNv2)
-
-Build and install DCN module.
-
-```bash
-$ cd THIS_PROJECT_ROOT/src/model/deformconv
-$ sh make.sh
-```
-
-The DCN module in this repository is from [here](https://github.com/xvjiarui/Deformable-Convolution-V2-PyTorch) but some function names are slightly different.
-
-Please refer to the [PyTorch DCN](https://github.com/chengdazhi/Deformable-Convolution-V2-PyTorch) for the original implementation.
-
-
 ## 💾 Datasets
 We used two datasets for training and evaluation.
-
-#### NYU Depth V2 (NYUv2)
-
-We used preprocessed NYUv2 HDF5 dataset provided by [Fangchang Ma](https://github.com/fangchangma/sparse-to-dense).
-
-```bash
-$ cd PATH_TO_DOWNLOAD
-$ wget http://datasets.lids.mit.edu/sparse-to-dense/data/nyudepthv2.tar.gz
-$ tar -xvf nyudepthv2.tar.gz
-```
-
-After that, you will get a data structure as follows:
-
-```
-nyudepthv2
-├── train
-│    ├── basement_0001a
-│    │    ├── 00001.h5
-│    │    └── ...
-│    ├── basement_0001b
-│    │    ├── 00001.h5
-│    │    └── ...
-│    └── ...
-└── val
-    └── official
-        ├── 00001.h5
-        └── ...
-```
-
-Download the  that the original full NYUv2 dataset is available at the [official website](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html).
-
-After preparing the dataset, you should generate a json file containing paths to individual images.
-
-```bash
-$ cd THIS_PROJECT_ROOT/utils
-$ python generate_json_NYUDepthV2.py --path_root PATH_TO_NYUv2
-```
-
-
-```bash
-$ cd THIS_PROJECT_ROOT/utils
-
-# For Train / Validation
-$ python generate_json_KITTI_DC.py --path_root PATH_TO_KITTI_DC
-
-# For Online Evaluation Data
-$ python generate_json_KITTI_DC.py --path_root PATH_TO_KITTI_DC --name_out kitti_dc_test.json --test_data
-```
 
 ## ⏳ Training
 $ python main.py --dir_data PATH_TO_KITTI_DC --data_name KITTIDC --split_json ../data_json/kitti_dc.json \
