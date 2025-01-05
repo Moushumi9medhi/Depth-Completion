@@ -877,3 +877,112 @@ Please email me if you need the dataset and I will share a private link with you
 
 
 mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm end
+
+gpt startttttttttttttttttttttttttttttttttttttttttttttt
+# Instructions to Run the Test Code
+
+This document provides step-by-step instructions to prepare the NYU depth data, set up the environment, and execute the provided Lua test script.
+
+---
+
+## 1. **Environment Setup**
+
+### Prerequisites
+Ensure the following dependencies are installed:
+
+1. **Torch**:
+   - Install Torch by following the instructions at [Torch GitHub](https://github.com/torch/distro).
+2. **Required Torch Packages**:
+   ```bash
+   luarocks install nn
+   luarocks install optim
+   luarocks install image
+   luarocks install matio
+   luarocks install paths
+   luarocks install cunn
+   luarocks install cudnn  # Optional, for GPU acceleration
+   ```
+3. **CUDA (Optional)**:
+   - For GPU support, ensure CUDA is installed and configured correctly.
+
+---
+
+## 2. **Prepare NYU Data**
+
+1. **Dataset Requirements**:
+   - The script expects input files in the `.mat` format.
+   - The `.mat` files should contain two channels:
+     - **Channel 1**: Depth data (raw input).
+     - **Channel 2**: Mask.
+
+2. **Input Directory**:
+   - Place all `.mat` files in the directory:
+     ```
+     /home/rrs/ONS_Mou/Fromeeserver_ubuntu/NYU_singleimage/
+     ```
+   - Ensure the directory exists and contains valid `.mat` files.
+
+---
+
+## 3. **Running the Code**
+
+### Steps:
+
+1. Open the Lua script (`test_nyu_model.lua`) in your preferred text editor or IDE.
+2. Ensure the following paths in the script are correct:
+   - Pretrained model path:
+     ```lua
+     /home/rrs/ONS_Mou/Fromeeserver_ubuntu/jbgjh/old/
+     ```
+   - Input directory:
+     ```lua
+     /home/rrs/ONS_Mou/Fromeeserver_ubuntu/NYU_singleimage/
+     ```
+   - Output directory:
+     ```lua
+     /home/rrs/ONS_Mou/Fromeeserver_ubuntu/NYU_results_forcroppedinput/
+     ```
+
+3. Execute the script from the command line:
+   ```bash
+   th test_nyu_model.lua
+   ```
+
+---
+
+## 4. **Output**
+
+### Results:
+
+1. **Predicted Outputs**:
+   - Predicted depth images will be saved in `.mat` format in:
+     ```
+     /home/rrs/ONS_Mou/Fromeeserver_ubuntu/NYU_results_forcroppedinput/
+     ```
+   - File naming convention: `overlaid_<input_filename>.mat`.
+
+2. **Visual Outputs**:
+   - Predicted depth maps (`.png`) will also be saved in the same directory with names like:
+     - `<input_filename>.png`: Raw predictions.
+     - `overlaid_<input_filename>.png`: Overlay of predictions on the original image.
+
+---
+
+## 5. **Notes**
+
+- Make sure the `.mat` files conform to the expected structure to avoid errors.
+- GPU usage is enabled by default. To disable GPU, set the `gpu` option to `0` in the script:
+  ```lua
+  opt = {
+      nc = 1,       -- Number of input channels
+      gpu = 0,      -- Disable GPU by setting to 0
+  }
+  ```
+- If using GPU, ensure that your CUDA version matches the `cudnn` library.
+
+---
+
+Feel free to reach out if you encounter any issues!
+
+
+gpt endddddddddddddddddddddddddddddddddddddddddddddd
