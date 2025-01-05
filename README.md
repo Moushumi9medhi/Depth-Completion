@@ -77,7 +77,7 @@ We introduce a new data format, called *Capture*, to handle multi-session and mu
 ## 🙏 Acknowledgement
 
 We thank the anonymous reviewers for their constructive reviews. 
-The training code is adapted from an initial fork of [Soumith's DCGAN](https://github.com/soumith/dcgan.torch) implementation.
+Some part of the training code is adapted from an initial fork of [Soumith's DCGAN](https://github.com/soumith/dcgan.torch) implementation. We'd like to thank the authors for making these frameworks available.
 ## Installation and Running
 ### Prerequisites
 1. Install `torch`: http://torch.ch/docs/getting-started.html
@@ -85,7 +85,7 @@ The training code is adapted from an initial fork of [Soumith's DCGAN](https://g
 ```shell
 luarocks install cv
 ```
-**Dependencies**
+**Setup dependencies**
 Ensure you have Torch7 installed along with the following required packages:
 
 ```lua
@@ -149,6 +149,19 @@ bash download_model.sh
 ```
 DATA_ROOT=celebA th data/crop_celebA.lua
 ```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+1) Place inputs into the `input` folder. An input image and corresponding sparse metric depth map are expected:
+
+    ```bash
+    input
+    ├── image                   # RGB image
+    │   ├── <timestamp>.png
+    │   └── ...
+    └── sparse_depth            # sparse metric depth map
+        ├── <timestamp>.png     # as 16b PNG
+        └── ...
+    ```
+
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 - The Places models were trained on the [Places2 dataset](http://places2.csail.mit.edu/) and thus best performance is for natural outdoor images.
 - While the Places2 models work on images of any size with arbitrary holes, we trained them on images with the smallest edges in the [256, 384] pixel range and random holes in the [96, 128] pixel range. Our models will work best on images with holes of those sizes.
@@ -356,7 +369,37 @@ python test.py --dims=[3,3,27,3] --depths=[128,256,512,1024] --dp_rate=0.1 --mod
 # SPNet-Large
 python test.py --dims=[3,3,27,3] --depths=[192,384,768,1536] --dp_rate=0.2 --model_dir='checkpoints/Large.pth'
 ```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2) Pick one or more ScaleMapLearner (SML) models and download the corresponding weights to the `weights` folder.
 
+    | Depth Predictor   |  SML on VOID 150  |  SML on VOID 500  | SML on VOID 1500 |
+    | :---              |       :----:      |       :----:      |      :----:      |
+    | DPT-BEiT-Large    | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_beit_large_512.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_beit_large_512.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_beit_large_512.nsamples.1500.ckpt) |
+    | DPT-SwinV2-Large  | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_large_384.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_large_384.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_large_384.nsamples.1500.ckpt) |
+    | DPT-Large         | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_large.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_large.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_large.nsamples.1500.ckpt) |
+    | DPT-Hybrid        | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_hybrid.nsamples.150.ckpt)* | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_hybrid.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_hybrid.nsamples.1500.ckpt) |
+    | DPT-SwinV2-Tiny   | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_tiny_256.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_tiny_256.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_tiny_256.nsamples.1500.ckpt) |
+    | DPT-LeViT         | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_levit_224.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_levit_224.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_levit_224.nsamples.1500.ckpt) |
+    | MiDaS-small       | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.midas_small.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.midas_small.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.midas_small.nsamples.1500.ckpt) |
+
+    *Also available with pretraining on TartanAir: [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_hybrid.nsamples.150.pretrained.ckpt)
+
+    Results for the example shown above:
+
+    ```
+    Averaging metrics for globally-aligned depth over 800 samples
+    Averaging metrics for SML-aligned depth over 800 samples
+    +---------+----------+----------+
+    |  metric | GA Only  |  GA+SML  |
+    +---------+----------+----------+
+    |   RMSE  |  191.36  |  142.85  |
+    |   MAE   |  115.84  |   76.95  |
+    |  AbsRel |    0.069 |    0.046 |
+    |  iRMSE  |   72.70  |   57.13  |
+    |   iMAE  |   49.32  |   34.25  |
+    | iAbsRel |    0.071 |    0.048 |
+    +---------+----------+----------+
+    ```
 ## 📜 License
 This project is licensed under the The MIT License (MIT).
 
@@ -364,7 +407,8 @@ This project is licensed under the The MIT License (MIT).
 
 **For any queries, feel free to raise an issue or contact us directly via [email](mailto:medhi.moushumi@iitkgp.ac.in).**
 2222222222222222222222 start
-
+https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html
+nyu data
 ### Results
 Quanlitative Evaluation On NYU online test dataset
 
@@ -381,6 +425,197 @@ Quanlitative Evaluation On KITTI online test dataset
 Quantitative Evaluation On KITTI online test dataset
 
 <img src="./results/KITTI_results.jpg" width = "600" height = "400" alt="KITTI_table" />
+
+
+
+
+
+3) The `--save-output` flag enables saving outputs to the `output` folder. By default, the following outputs will be saved per sample:
+
+    ```bash
+    output
+    ├── ga_depth                # metric depth map after global alignment
+    │   ├── <timestamp>.pfm     # as PFM
+    │   ├── <timestamp>.png     # as 16b PNG
+    │   └── ...
+    └── sml_depth               # metric depth map output by SML
+        ├── <timestamp>.pfm     # as PFM
+        ├── <timestamp>.png     # as 16b PNG
+        └── ...
+    ```
+
+Models provided in this repo were trained on the VOID dataset. 
+1) Download the VOID dataset following [the instructions in the VOID dataset repo](https://github.com/alexklwong/void-dataset#downloading-void).
+
+
+<!-- PROJECT LOGO -->
+
+<p align="center">
+
+  <h1 align="center">CompletionFormer: Depth Completion with Convolutions and Vision Transformers</h1>
+  <p align="center">
+    <a href="https://youmi-zym.github.io"><strong>Youmin Zhang</strong></a>
+    ·
+    <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=jPvOqgYAAAAJ"><strong>Xianda Guo</strong></a>
+    ·
+    <a href="https://mattpoggi.github.io/"><strong>Matteo Poggi</strong></a>
+    <br>
+    <a href="http://www.zhengzhu.net/"><strong>Zheng Zhu</strong></a>
+    ·
+    <a href=""><strong>Guan Huang</strong></a>
+    ·
+    <a href="http://vision.deis.unibo.it/~smatt/Site/Home.html"><strong>Stefano Mattoccia</strong></a>
+  </p>
+  <h3 align="center"><a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Zhang_CompletionFormer_Depth_Completion_With_Convolutions_and_Vision_Transformers_CVPR_2023_paper.pdf">Paper</a> | <a href="https://www.youtube.com/watch?v=SLKAwrY2qjg&t=111s">Video</a> | <a href="https://youmi-zym.github.io/projects/CompletionFormer">Project Page</a></h3>
+  <div align="center"></div>
+</p>
+<p align="center">
+  <a href="https://youmi-zym.github.io/projects/CompletionFormer">
+    <img src="./media/architecture.png" alt="Logo" width="98%">
+  </a>
+</p>
+<p align="center">
+<strong>CompletionFormer</strong>, enabling both local and global propagation for depth completion.
+</p>
+
+## ⚙️ Setup
+
+Assuming a fresh [Anaconda](https://www.anaconda.com/download/) distribution, you can install the dependencies with:
+```shell
+conda create -n completionformer python=3.8
+conda activate completionformer
+# For CUDA Version == 11.3
+pip install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113
+pip install mmcv-full==1.4.4 mmsegmentation==0.22.1  
+pip install timm tqdm thop tensorboardX opencv-python ipdb h5py ipython Pillow==9.5.0 
+```
+We ran our experiments with PyTorch 1.10.1, CUDA 11.3, Python 3.8 and Ubuntu 20.04.
+
+<!-- We recommend using a [conda environment](https://conda.io/docs/user-guide/tasks/manage-environments.html) to avoid dependency conflicts. -->
+
+#### Docker
+
+You can get started with docker by making sure you're default runtime is set to nvidia-container-runtime
+
+```bash
+# /etc/docker/daemon.json
+{
+    "runtimes": {
+        "nvidia": {
+            "path": "/usr/bin/nvidia-container-runtime",
+            "runtimeArgs": []
+         } 
+    },
+    "default-runtime": "nvidia" 
+}
+```
+
+Then you can build the image along with the DCNv2 cuda kernels with:
+
+```bash
+docker build -t completionformer:latest .
+# run container
+docker run --rm -it --gpus all completionformer
+```
+
+#### NVIDIA Apex
+
+We used NVIDIA Apex (commit @ 4ef930c1c884fdca5f472ab2ce7cb9b505d26c1a) for multi-GPU training.
+
+Apex can be installed as follows:
+
+```bash
+$ cd PATH_TO_INSTALL
+$ git clone https://github.com/NVIDIA/apex
+$ cd apex
+$ git reset --hard 4ef930c1c884fdca5f472ab2ce7cb9b505d26c1a
+$ pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ 
+```
+
+
+#### Deformable Convolution V2 (DCNv2)
+
+Build and install DCN module.
+
+```bash
+$ cd THIS_PROJECT_ROOT/src/model/deformconv
+$ sh make.sh
+```
+
+The DCN module in this repository is from [here](https://github.com/xvjiarui/Deformable-Convolution-V2-PyTorch) but some function names are slightly different.
+
+Please refer to the [PyTorch DCN](https://github.com/chengdazhi/Deformable-Convolution-V2-PyTorch) for the original implementation.
+
+
+## 💾 Datasets
+We used two datasets for training and evaluation.
+
+#### NYU Depth V2 (NYUv2)
+
+We used preprocessed NYUv2 HDF5 dataset provided by [Fangchang Ma](https://github.com/fangchangma/sparse-to-dense).
+
+```bash
+$ cd PATH_TO_DOWNLOAD
+$ wget http://datasets.lids.mit.edu/sparse-to-dense/data/nyudepthv2.tar.gz
+$ tar -xvf nyudepthv2.tar.gz
+```
+
+After that, you will get a data structure as follows:
+
+```
+nyudepthv2
+├── train
+│    ├── basement_0001a
+│    │    ├── 00001.h5
+│    │    └── ...
+│    ├── basement_0001b
+│    │    ├── 00001.h5
+│    │    └── ...
+│    └── ...
+└── val
+    └── official
+        ├── 00001.h5
+        └── ...
+```
+
+Download the  that the original full NYUv2 dataset is available at the [official website](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html).
+
+After preparing the dataset, you should generate a json file containing paths to individual images.
+
+```bash
+$ cd THIS_PROJECT_ROOT/utils
+$ python generate_json_NYUDepthV2.py --path_root PATH_TO_NYUv2
+```
+
+
+```bash
+$ cd THIS_PROJECT_ROOT/utils
+
+# For Train / Validation
+$ python generate_json_KITTI_DC.py --path_root PATH_TO_KITTI_DC
+
+# For Online Evaluation Data
+$ python generate_json_KITTI_DC.py --path_root PATH_TO_KITTI_DC --name_out kitti_dc_test.json --test_data
+```
+
+## ⏳ Training
+$ python main.py --dir_data PATH_TO_KITTI_DC --data_name KITTIDC --split_json ../data_json/kitti_dc.json \
+    --patch_height 240 --patch_width 1216 --gpus 0,1,2,3 --loss 1.0*L1+1.0*L2 --lidar_lines 64 \
+    --batch_size 3 --max_depth 90.0 --lr 0.001 --epochs 250 --milestones 150 180 210 240 \
+    --top_crop 100 --test_crop --log_dir ../experiments/ --save NAME_TO_SAVE \
+```
+
+Please refer to the config.py for more options. 
+Then you can access the tensorboard via http://YOUR_SERVER_IP:6006
+
+## 📊 Testing
+
+**Pretrained Checkpoints**: [NYUv2](https://drive.google.com/drive/folders/1GlMVhI1Auo9noimR6NN0S-QLwL04ypCb?usp=sharing), [KITTI_DC](https://drive.google.com/drive/folders/1Tp1XAU7D7HOMq_iLEGzvt4I15g_HGBeM?usp=sharing)!
+
+
+## 👩‍⚖️ Acknowledgement
+Besides, we also thank [DySPN](https://arxiv.org/abs/2202.09769) for providing their evalution results on KITTI DC.
+
 
 
 
@@ -513,6 +748,9 @@ If you could successfully run the above demo, run following steps to train your 
   DATA_ROOT=dataset/val net=checkpoints/inpaintRandomNoOverlap_500_net_G.t7 name=test_patch_random useOverlapPred=0 manualSeed=222 batchSize=30 loadSize=350 gpu=1 th test_random.lua
   DATA_ROOT=dataset/val net=checkpoints/inpaintRandomNoOverlap_500_net_G.t7 name=test_full_random useOverlapPred=0 manualSeed=222 batchSize=30 loadSize=129 gpu=1 th test_random.lua
   ```
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+We used NYU Depth Dataset V2 as our dataset. We used Labeled dataset (~2.8 GB) of NYU Depth Dataset which provides 1449 densely labeled pairs of aligned RGB and depth images. We divided labeled dataset into three parts (Training - 1024, Validation - 224, Testing - 201) for our project. NYU Dataset also provides Raw dataset (~428 GB) on which we couldn't train due to machine capacity.
+We used [NYU Depth Dataset V2](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html) as our dataset. We used Labeled dataset (~2.8 GB) of NYU Depth Dataset which provides 1449 densely labeled pairs of aligned RGB and depth images. We divided labeled dataset into three parts (Training - 1024, Validation - 224, Testing - 201) for our project. NYU Dataset also provides Raw dataset (~428 GB) on which we couldn't train due to machine capacity.
 
 ### 3) Download Features Caffemodel
 
