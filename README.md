@@ -20,7 +20,7 @@
 
 ---
 ##
-This repository hosts the source code for unguided single-depth map completion of indoor scenes—a lightweight design for restoring noisy depth maps in a realistic manner using a generative adversarial network (GAN).
+🚨 This repository hosts the source code for unguided single-depth map completion of indoor scenes—a lightweight design for restoring noisy depth maps in a realistic manner using a generative adversarial network (GAN).
 ## 📖 Abstract
 Single depth map completion in the absence of any guidance from color images is a challenging,
 ill-posed problem in computer vision. Most of the conventional depth map completion approaches
@@ -431,7 +431,7 @@ This project is licensed under the The MIT License (MIT).
 
 ---
 
-**For any queries, feel free to raise an issue or contact us directly via [email](mailto:medhi.moushumi@iitkgp.ac.in).**
+** :envelope: For any queries, feel free to raise an issue or contact us directly via [email](mailto:medhi.moushumi@iitkgp.ac.in).**
 2222222222222222222222 start
 https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html
 nyu data
@@ -493,6 +493,231 @@ Then you can access the tensorboard via http://YOUR_SERVER_IP:6006
 
 ## 👩‍⚖️ Acknowledgement
 Besides, we also thank [DySPN](https://arxiv.org/abs/2202.09769) for providing their evalution results on KITTI DC.
+
+<h2>
+<a href="https://whu-usi3dv.github.io/SparseDC/" target="_blank">SparseDC: Depth completion from sparse and non-uniform inputs</a>
+</h2>
+
+This is the official PyTorch implementation of the following publication:
+
+> **SparseDC: Depth completion from sparse and non-uniform inputs**<br/>
+> [Chen Long](https://chenlongwhu.github.io/), [Wenxiao Zhang](https://github.com/XLechter), [Zhe Chen](https://github.com/ChenZhe-Code), [Haiping Wang](https://hpwang-whu.github.io/), [Yuan Liu](https://liuyuan-pal.github.io/), [Peiling Tong](https://3s.whu.edu.cn/info/1028/1961.htm), [Zhen Cao](https://github.com/a4152684), [Zhen Dong](https://dongzhenwhu.github.io/index.html), [Bisheng Yang](https://3s.whu.edu.cn/info/1025/1415.htm)<br/>
+> *Information Fusion 2024*<br/>
+> [**Paper**](https://doi.org/10.1016/j.inffus.2024.102470) | [**Project-page**]() | [**Video**]()
+
+
+## 🔭 Introduction
+<p align="center" style="font-size:18px">
+<strong>SparseDC: Depth completion from sparse and non-uniform inputs</strong>
+</p>
+<img src="media/teaser.png" alt="Network" style="zoom:50%;">
+
+<p align="justify">
+<strong>Abstract:</strong> We propose SparseDC, a model for <strong>D</strong>epth <strong>C</strong>ompletion of <strong>Sparse</strong> and non-uniform depth inputs. Unlike previous methods focusing on completing fixed distributions on benchmark datasets (e.g., NYU with 500 points, KITTI with 64 lines), SparseDC is specifically designed to handle depth maps with poor quality in real usage.
+The key contributions of SparseDC are two-fold.
+First, we design a simple strategy, called SFFM, to improve the robustness under sparse input by explicitly filling the unstable depth features with stable image features.
+Second, we propose a two-branch feature embedder to predict both the precise local geometry of regions with available depth values and accurate structures in regions with no depth. The key of the embedder is an uncertainty-based fusion module called UFFM to balance the local and long-term information extracted by CNNs and ViTs. Extensive indoor and outdoor experiments demonstrate the robustness of our framework when facing sparse and non-uniform input depths.
+</p>
+
+## 🆕 News
+- 2024-04-10: [SparseDC](https://doi.org/10.1016/j.inffus.2024.102470) is accepted by Information Fusion! 🎉
+- 2023-12-04: Code, [Preprint paper](https://arxiv.org/pdf/2312.00097) are available! 🎉
+
+## 💻 Requirements
+The code has been trained on:
+- Ubuntu 20.04
+- CUDA 11.3
+- Python 3.9.18
+- Pytorch 1.12.1
+- GeForce RTX 4090 $\times$ 2.
+
+## 🔧 Installation
+
+
+## 💾 Datasets
+We used two datasets for training and three datasets for evaluation.
+
+#### NYU Depth V2 (NYUv2)
+
+We used preprocessed NYUv2 HDF5 dataset provided by [Fangchang Ma](https://github.com/fangchangma/sparse-to-dense).
+
+```bash
+$ cd PATH_TO_DOWNLOAD
+$ wget http://datasets.lids.mit.edu/sparse-to-dense/data/nyudepthv2.tar.gz
+$ tar -xvf nyudepthv2.tar.gz
+```
+Note that the original full NYUv2 dataset is available at the [official website](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html).
+
+
+Then, you should generate a json file containing paths to individual images. We use the data lists for NYUv2 borrowed from the [NLSPN repository](https://github.com/zzangjinsun/NLSPN_ECCV20/blob/master/data_json/nyu.json). You can put this json into your data dir.
+
+After that, you will get a data structure as follows:
+
+```
+nyudepthv2
+├── nyu.json
+├── train
+│    ├── basement_0001a
+│    │    ├── 00001.h5
+│    │    └── ...
+│    ├── basement_0001b
+│    │    ├── 00001.h5
+│    │    └── ...
+│    └── ...
+└── val
+    └── official
+        ├── 00001.h5
+        └── ...
+```
+
+## 🚅 Pretrained model
+
+## ✏️ Test
+
+
+## 💡 Citation
+## :bookmark_tabs: Table of Contents
+- [:bookmark\_tabs: Table of Contents](#bookmark_tabs-table-of-contents)
+- [:clapper: Introduction](#clapper-introduction)
+- [:inbox\_tray: Pretrained Models](#inbox_tray-pretrained-models)
+- [:memo: Code](#memo-code)
+  - [:hammer\_and\_wrench: Setup Instructions](#hammer_and_wrench-setup-instructions)
+- [:floppy\_disk: Datasets](#floppy_disk-datasets)
+- [:rocket: Test](#rocket-test)
+- [:art: Qualitative Results](#art-qualitative-results)
+- [:envelope: Contacts](#envelope-contacts)
+- [:pray: Acknowledgements](#pray-acknowledgements)
+
+</div>
+
+## :clapper: Introduction
+
+## :inbox_tray: Pretrained Models
+
+### :hammer_and_wrench: Setup Instructions
+
+
+## :floppy_disk: Datasets
+We used two datasets for training and evaluation.
+
+### NYU Depth V2 (NYUv2)
+
+We used preprocessed NYUv2 HDF5 dataset provided by [Andrea Conti](https://github.com/andreaconti/sparsity-agnostic-depth-completion).
+
+```bash
+$ cd PATH_TO_DOWNLOAD
+$ wget https://github.com/andreaconti/sparsity-agnostic-depth-completion/releases/download/v0.1.0/nyu_img_gt.h5
+$ wget https://github.com/andreaconti/sparsity-agnostic-depth-completion/releases/download/v0.1.0/nyu_pred_with_500.h5
+```
+
+After that, you will get a data structure as follows:
+
+```
+nyudepthv2
+├── nyu_img_gt.h5
+└── nyu_pred_with_500.h5
+```
+
+Note that the original full NYUv2 dataset is available at the [official website](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html).
+
+
+## :art: Qualitative Results
+
+In this section, we present illustrative examples that demonstrate the effectiveness of our proposal.
+
+<br>
+
+<p float="left">
+  <img src="./images/competitors.png" width="800" />
+</p>
+ 
+**Synth-to-real generalization.** Given an NYU Depth V2 frame and 500 sparse depth points (a), our framework with RAFT-Stereo trained only on the Sceneflow synthetic dataset (e) outperforms the generalization capability of state-of-the-art depth completion networks [NLSPN](https://github.com/zzangjinsun/NLSPN_ECCV20) (b), [SpAgNet](https://github.com/andreaconti/sparsity-agnostic-depth-completion) (c), and [CompletionFormer](https://github.com/youmi-zym/CompletionFormer) (d) – all trained on the same synthetic dataset.
+ 
+<br>
+
+<p float="left">
+  <img src="./images/indoor2outdoor.png" width="800" />
+</p>
+
+**From indoor to outdoor.** When it comes to pre-training on SceneFlow and train on indoor data then run the model outdoor, significant domain shift occurs. NLPSN and CompletionFormer seem unable to generalize to outdoor data, while SpAgNet can produce some meaningful depth maps, yet far from being accurate. Finally, VPP4DC can improve the results even further thanks to the pre-training process.
+
+<br>
+
+<p float="left">
+  <img src="./images/outdoor2indoor.png" width="800" />
+</p>
+
+**From outdoor to indoor.** We consider the case complementary to the previous one – i.e., with models pre-trained on SceneFlow and trained outdoor then tested indoor. NLSPN, CompletionFormer and SpAgNet can predict a depth map that is reasonable to some extent. Our approach instead predicts very accurate results on regions covered by depth hints, yet failing where these are absent.
+
+## :envelope: Contacts
+
+For questions, please send an email to luca.bartolomei5@unibo.it
+
+
+## :pray: Acknowledgements
+
+
+## Download Dataset \& Pretrained Model
+Download [here](https://drive.google.com/drive/folders/1o_I4Z-9xRT7PqBgXQQgVUlcDOwOTT9Qj?usp=drive_link) .
+
+Unzip and place dataset under the `RoofDiffusion/dataset` of repo e.g. `RoofDiffusion/dataset/PoznanRD`
+
+Place RoofDiffusion pretrained model at `RoofDiffusion/pretrained/w_footprint/260_Network.pth`
+
+Or place No-NF RoofDiffusion pretrained model at `RoofDiffusion/pretrained/wo_footprint/140_Network.pth`
+
+> The height maps are in uint16 format, where the actual roof height (meter) = pixel value / 256. (same as [KITTI dataset](https://www.cvlibs.net/datasets/kitti/eval_depth_all.php))
+
+## Training
+**RoofDiffusion**
+
+Use `roof_completion.json` for training the RoofDiffusion model with the footprint version, where in each footprint image, a pixel value of 1 denotes the building footprint and 0 denotes areas outside the footprint. 
+```console
+python run.py -p train -c config/roof_completion.json
+```
+
+**No-FP RoofDiffusion**
+
+Use `roof_completion_no_footprint.json` for training with footprint images where all pixels are set to 1, indicating no distinction between inside and outside footprint areas.
+```console
+python run.py -p train -c config/roof_completion_no_footprint.json
+```
+
+See training progress
+```console
+tensorboard --logdir experiments/train_roof_completion_XXXXXX_XXXXXX
+```
+
+## Inference
+**RoofDiffusion**
+```console
+python run.py -p test -c config/roof_completion.json \
+    --resume ./pretrained/w_footprint/260 \
+    --n_timestep 500 \
+    --data_root ./dataset/PoznanRD/benchmark/w_footprint/s95_i30/img.flist \
+    --footprint_root ./dataset/PoznanRD/benchmark/w_footprint/s95_i30/footprint.flist
+```
+
+**No-FP RoofDiffusion**
+```console
+python run.py -p test -c config/roof_completion_no_footprint.json \
+    --resume ./pretrained/wo_footprint/140 \
+    --n_timestep 500 \
+    --data_root ./dataset/PoznanRD/benchmark/wo_footprint/s95_i30/img.flist \
+    --footprint_root ./dataset/PoznanRD/benchmark/wo_footprint/s95_i30/footprint.flist
+```
+
+> Tested on NVIDIA RTX3090. Please adjust `batch_size` in JSON file if out of GPU memory.
+
+
+## Customize Data Synthesis for Training
+Modify JSON config file:
+- `"down_res_pct"` controls sparsity.
+- `"local_remove"` adjusts local incompleteness (Please refer to paper for details).
+- `"noise_config"` injects senser/environmental noise.
+- `"height_scale_probability"` randomly scales the distance between the min-max nonzero roof height.
+- `"tree"` introduce tree noise into height maps
+
 
 
 
