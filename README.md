@@ -22,17 +22,7 @@
 ##
 🚨 This repository hosts the source code for unguided single-depth map completion of indoor scenes—a lightweight design for restoring noisy depth maps in a realistic manner using a generative adversarial network (GAN).
 ## 📖 Abstract
-Single depth map completion in the absence of any guidance from color images is a challenging,
-ill-posed problem in computer vision. Most of the conventional depth map completion approaches
-rely on information extracted from the corresponding color image and require heavy computations
-and optimization-based postprocessing functions, which cannot yield results in real time. Successful
-application of generative adversarial networks has led to significant progress in several computer vision
-problems including, color image inpainting. However, contrasting local and non-local features of depth
-maps compared to color images prevents the direct application of deep learning models designed for
-color image inpainting to depth map completion. In this work we
-propose to use deep adversarial learning to derive plausible estimates of missing depth information
-in a single degraded observation without any guidance from the corresponding RGB frame and any
-postprocessing. 
+Depth map completion without guidance from color images is a challenging, ill-posed problem. Conventional methods rely on computationally intensive optimization processes. This work proposes a deep adversarial learning approach to estimate missing depth information directly from a single degraded observation, without requiring RGB guidance or postprocessing.
 
 ### Key Features
 
