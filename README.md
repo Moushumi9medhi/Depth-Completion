@@ -44,12 +44,14 @@ We thank the anonymous reviewers for their constructive reviews.
 Some part of the training code is adapted from an initial fork of [Soumith's DCGAN](https://github.com/soumith/dcgan.torch) implementation. We'd like to thank the authors for making these frameworks available.
 ## Installation and Running
 ### Prerequisites
-1. Install `torch`: http://torch.ch/docs/getting-started.html
-..............MATIO
-```shell
-luarocks install cv
+1. Install torch: http://torch.ch/docs/getting-started.html
+Install the `matio` package using the following command:
+```bash
+luarocks install --server=https://luarocks.org/dev matio 
 ```
+
 **Setup dependencies**
+
 Ensure you have Torch7 installed along with the following required packages:
 
 ```lua
@@ -61,22 +63,20 @@ require 'autograd'
 require 'torch'
 require 'ffi'
 require('pl.class')
+```
 Other dependencies required:
 - `cunn`
 - `optim`
 - `autograd`
 - `threads`
 
-Install the `matio` package using the following command:
-```bash
-luarocks install --server=https://luarocks.org/dev matio 
 
 2. Clone the repository
   ```Shell
   git clone https://github.com/Moushumi9medhi/Depth-Completion.git
   cd Depth-Completion
   ```
-3. Run the following single command in your terminal to download the pretrained model:
+3. Run the following single command in your terminal to download the pretrained model:............................CHECK THIS
 
 ```bash
 bash download_model.sh
