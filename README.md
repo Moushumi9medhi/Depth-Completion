@@ -37,11 +37,7 @@ Depth map completion without guidance from color images is a challenging, ill-po
 
 The BibTeX citation will be provided soon.
 
-1. __A dataset__: multi-sensor data streams captured by AR devices and laser scanners
-2. __scantools__: a processing pipeline to register different user sessions together
-3. __A benchmark__: a framework to evaluate algorithms for localization and mapping
 
-See our [ECCV 2022 tutorial](https://lamar.ethz.ch/tutorial-eccv2022/) for an overview of LaMAR and of the state of the art of localization and mapping for AR.
 
 ## Overview
 
