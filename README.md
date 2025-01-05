@@ -38,19 +38,6 @@ Depth map completion without guidance from color images is a challenging, ill-po
 The BibTeX citation will be provided soon.
 
 
-
-## Overview
-
-This codebase is composed of the following modules:
-
-- <a href="#benchmark">`lamar`</a>: evaluation pipeline and baselines for localization and mapping
-- <a href="#processing-pipeline">`scantools`</a>: data API, processing tools and pipeline
-- [ScanCapture](apps/ScanCapture_iOS): a data recording app for Apple devices
-
-
-
-
-
 ## 🙏 Acknowledgement
 
 We thank the anonymous reviewers for their constructive reviews. 
