@@ -986,3 +986,4 @@ Feel free to reach out if you encounter any issues!
 
 
 gpt endddddddddddddddddddddddddddddddddddddddddddddd
+local directory ='/home/cvlab/data/test/NYU/' .......for loading real test images
