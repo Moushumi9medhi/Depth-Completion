@@ -78,37 +78,10 @@ Clone the repository
   cd Depth-Completion
   ```
 
-Run the following single command in your terminal to download the pretrained model:............................CHECK THIS
-
-```bash
-bash download_model.sh
-# It will download the pre-trained model into the `models` directory.
-```
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- We have released the following two models:
-- `completionnet_places2_freeform.t7`: An image completion model trained with free-form holes on the [Places2 dataset](http://places2.csail.mit.edu/), which will work better than the model trained with rectangular holes, even without post-processing. We used a part of the [context encoder [Pathak et al. 2016]](https://github.com/pathak22/context-encoder) implementation to generate the random free-form holes for training.
-- `completionnet_celeba.t7`: A face completion model trained with rectangular holes on the [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). This model was trained on face images with the smallest edges in the [160, 178], and thus it will work best on images of similar sizes.
-
-These models can be downloaded via `download_model.sh`.
-XXXXXXXXXXXXXXXXXXXXX
-Use the provided `download_model.sh` script to download the pre-trained model. Simply run:
-```bash
-bash download_model.sh
-```
 ### Training
 1. Choose a RGB-Depth dataset and create a folder with its name (ex: `mkdir celebA`). Inside this folder create a folder `images` containing your images.  .....swee how training  image folder was created...............check this........not right.....
 
  Download [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) or [SUN397](http://vision.cs.princeton.edu/projects/2010/SUN/) dataset, or prepare your own dataset. 
-  ```Shell
-  # put all training images inside my_train_set/images/
-  mkdir -p /your_path/my_train_set/images/
-  # put all validation images inside my_val_set/images/
-  mkdir -p /your_path/my_val_set/images/
-  # put all testing images inside my_test_set/images/
-  mkdir -p /your_path/my_test_test/images/
-  cd on-demand-learning/
-  ln -sf /your_path dataset
-  ```
 
 
 *Note:* for the `celebA` dataset, run
@@ -190,13 +163,7 @@ Train the model
   cd pixelInterpolation
   DATA_ROOT=../dataset/my_train_set name=pixel niter=250 loadSize=96 fineSize=64 display=1 display_iter=50 gpu=1 th train.lua
   ```
-  xxxxxxxxxxxxxxxxxxxxxxxxxxx
-  
-First, download the models by running the download script:
-
-```
-bash download_model.sh
-```
+ 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
   Train the model
   ```Shell
@@ -338,26 +305,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ## Benchmark
 
-We evaluate the performance of multiple state-of-the-art and popular stereo matching methods, both for standard and 360° images. All models are trained on a single NVIDIA A100 GPU with
-the largest possible batch size to ensure comparable use of computational resources.
-
-| Method             | Type           | Disp-MAE (°) | Disp-RMSE (°) | Disp-MARE | Depth-MAE (m) | Depth-RMSE (m) | Depth-MARE |
-|--------------------|----------------|--------------|---------------|-----------|---------------|----------------|----------------|
-| [PSMNet](https://arxiv.org/abs/1803.08669)           | Stereo        | 0.33         | 0.54          | 0.20      | 2.79          | 6.17           | 0.29           |
-| [360SD-Net](https://arxiv.org/abs/1911.04460)        | 360° Stereo   | 0.21         | 0.42          | 0.18      | 2.14          | 5.12           | 0.15           |
-| [IGEV-Stereo](https://arxiv.org/abs/2303.06615)      | Stereo        | 0.22         | 0.41          | 0.17      | 1.85          | 4.44           | 0.15           |
-| [360-IGEV-Stereo](https://arxiv.org/abs/2411.18335)    | 360° Stereo   | **0.18**     | **0.39**      | **0.15**  | **1.77**      | **4.36**       | **0.14**       |
-
-
-Download and save the `pretrained model` to `./checkpoints`
-
-| Pretrained Model                                                                                    | Blocks    | Channels | Drop rate |
-| --------------------------------------------------------------------------------------------------- |:-------:|:--------:|:-------:|
-| [SPNet-Tiny](https://drive.google.com/file/d/1ivmCX-i9lej4uJhT0Yyk2Nq9ZmoQlsB9/view?usp=drive_link)    | [3,3,9,3]  | [96,192,384,768]    | 0.0  |
-| [SPNet-Small](https://drive.google.com/file/d/1Ba-W3oX62lCjx5MvvGkn91LXP6SuCnV6/view?usp=drive_link)   | [3,3,27,3] | [96,192,384,768]    | 0.1  | 
-| [SPNet-Base](https://drive.google.com/file/d/1B9uPRVPGm1F8F-isVDVzEdHgxXmp43hn/view?usp=drive_link)    | [3,3,27,3] | [128,256,512,1024]  | 0.1  | 
-| [SPNet-Large](https://drive.google.com/file/d/11dujPviL4pKLEXytXK0mEmPBNQDqgEak/view?usp=drive_link)   | [3,3,27,3] | [192,384,768,1536]  | 0.2  | 
-
 Run `test.py`
 
 ```python
@@ -371,6 +318,7 @@ python test.py --dims=[3,3,27,3] --depths=[128,256,512,1024] --dp_rate=0.1 --mod
 python test.py --dims=[3,3,27,3] --depths=[192,384,768,1536] --dp_rate=0.2 --model_dir='checkpoints/Large.pth'
 ```
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 2) Pick one or more ScaleMapLearner (SML) models and download the corresponding weights to the `weights` folder.
 
     | Depth Predictor   |  SML on VOID 150  |  SML on VOID 500  | SML on VOID 1500 |
@@ -742,9 +690,6 @@ mmmmmmmmmmmmmmmmmmmmmmmmmm start
 
 
 ## 🏃‍♂️ Getting Started
-Download the pretrained base models for [StableDiffusion V1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [MSE-finetuned VAE](https://huggingface.co/stabilityai/sd-vae-ft-mse).
-
-Download our MagicAnimate [checkpoints](https://huggingface.co/zcxu-eric/MagicAnimate).
 
 
 
@@ -830,12 +775,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 We used NYU Depth Dataset V2 as our dataset. We used Labeled dataset (~2.8 GB) of NYU Depth Dataset which provides 1449 densely labeled pairs of aligned RGB and depth images. We divided labeled dataset into three parts (Training - 1024, Validation - 224, Testing - 201) for our project. NYU Dataset also provides Raw dataset (~428 GB) on which we couldn't train due to machine capacity.
 We used [NYU Depth Dataset V2](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html) as our dataset. We used Labeled dataset (~2.8 GB) of NYU Depth Dataset which provides 1449 densely labeled pairs of aligned RGB and depth images. We divided labeled dataset into three parts (Training - 1024, Validation - 224, Testing - 201) for our project. NYU Dataset also provides Raw dataset (~428 GB) on which we couldn't train due to machine capacity.
 
-### 3) Download Features Caffemodel
-
-Features for context encoder trained with reconstruction loss.
-
-- [Prototxt](https://www.cs.cmu.edu/~dpathak/context_encoder/resources/ce_features.prototxt)
-- [Caffemodel](https://www.cs.cmu.edu/~dpathak/context_encoder/resources/ce_features.caffemodel)
+### 3) 
 
 ### 4) TensorFlow Implementation
 
