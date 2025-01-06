@@ -71,7 +71,7 @@ Clone the repository
   git clone https://github.com/Moushumi9medhi/Depth-Completion.git
   cd Depth-Completion
   ```
-### 📊 Demo
+### 💃 Demo
 If you want to run  quick demos for depth completion corresponding to the two cases of our depth degradations: 90% random missing depth values and real Kinect depth degradation, please download our pre-trained models.
  
 All models are trained on a single GeForce GTX 1080 Ti GPU with the largest possible batch size.
@@ -224,22 +224,10 @@ mmmmmmmmmmmmmmmmmmmmmmmmmm start
   </table>
 
 
-## 🏃‍♂️ Getting Started
-
-
-
-## ⚒️ Installation
-
-
-## 💃 Inference
+##  Getting Started
 
 
 ## 🎨 Gradio Demo 
-
- 
-### 2) Train Context Encoders
-
-
 
 
 mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm end
