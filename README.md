@@ -101,7 +101,7 @@ Execute the testing script from the command line:
   ```
 
 ### ⏳ Training
-We used the :floppy_disk:[NYU-Depth V2](https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html) dataset for all training purposes and have provided the trained models above. Please refer to our paper for more details. If you want to train your own generator and discriminator models or to train on a different dataset, run the training file `train.lua`.
+We used the :floppy_disk:[NYU-Depth V2](https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html) dataset for all training purposes and have provided the trained models above. Please refer to our paper for more details on training data generation. If you want to train your own generator and discriminator models or to train on a different dataset, run the training file `train.lua`.
 ```Shell
  th train.lua
 ```
