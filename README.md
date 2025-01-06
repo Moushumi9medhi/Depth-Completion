@@ -243,33 +243,32 @@ Other options:
 For example:
 
 ### Demo
-If you want to run a quick demo for the four image restoration tasks, please download our pre-trained models using the following script.
-  ```Shell
-  cd models
-  #download image inpainting model
-  bash download_model.sh inpainting
-  #download pixel interpolation model
-  bash download_model.sh pixelInterpolation
-  #download image deblurring model
-  bash download_model.sh deblurring
-  #download image denoising model
-  bash download_model.sh denoising
-  #download our image denoising model equipped to denoise images of any size
-  bash download_model.sh denoise_anysize
-  ```
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Demo
+### Demo
+If you want to run  quick demos for depth completion corresponding to the two cases of our depth degradations: 90% random missing depth values and real Kinect depth degradation:
+restoration tasks, please download our pre-trained models using the following script.
+ 
+All models are trained on a single GeForce GTX 1080 Ti GPU with
+the largest possible batch size to ensure efficient computational resources.....check this line.........confirm this.............
+
+| Degradation type            | Models           | Params | Performance |
+|-----------------------------|:-------:|:-------:|:-------:|
+| Simulated random (90%)      | [GAN-RM(90%)] (https://www.dropbox.com/scl/fi/wv4fl50qvqjxxw14ge0zl/DC_chk_90.t7?rlkey=9b6pet4fgrp43td5kvpk20iyb&st=dhy7wshq&dl=1) | 1.45M | 33.70 dB [PSNR/Middlebury]                                                     |
+| Real Kinect depth map holes | [GAN-Real](https://www.dropbox.com/scl/fi/12nmxojuljmwk8km39jmc/DC_chk_Real.t7?rlkey=vgqcf8o00orsguab34lsgb2bq&st=i23va6n7&dl=1)     | 1.81M | 40.77 dB [PSNR/K_deg], 1.54m [RMSE/Matterport-500], 1.49m [RMSE/Matterport-474]|
+
+
+Download and save the `pretrained model(s)` to `./chk`.
+
+check the belowwwwww..............................................
   ```Shell
   # Test the image inpainting model on various corruption levels
   cd inpainting
   DATA_ROOT=../dataset/my_test_set name=inpaint_demo net=../models/inpainting_net_G.t7 manualSeed=333 gpu=1 display=1 th demo.lua
   # Demo results saved as inpaint_demo.png
   ```
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
   Demo
   ```Shell
-  # Test the image deblurring model on various corruption levels
-  cd deblurring
+  # Test the depth completion model for  90% randomly missing depth values
   DATA_ROOT=../dataset/my_test_set name=deblur_demo net=../models/deblurring_net_G.t7 manualSeed=333 gpu=1 display=1 th demo.lua
   # Demo results saved as deblur_demo.png
   ```
@@ -305,33 +304,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ## Benchmark
 
-Run `test.py`
-
-```python
-# SPNet-Tiny
-python test.py --dims=[3,3,9,3] --depths=[96,192,384,768] --dp_rate=0.0 --model_dir='checkpoints/Tiny.pth'
-# SPNet-Small
-python test.py --dims=[3,3,27,3] --depths=[96,192,384,768] --dp_rate=0.1 --model_dir='checkpoints/Small.pth'
-# SPNet-Base
-python test.py --dims=[3,3,27,3] --depths=[128,256,512,1024] --dp_rate=0.1 --model_dir='checkpoints/Base.pth'
-# SPNet-Large
-python test.py --dims=[3,3,27,3] --depths=[192,384,768,1536] --dp_rate=0.2 --model_dir='checkpoints/Large.pth'
-```
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-2) Pick one or more ScaleMapLearner (SML) models and download the corresponding weights to the `weights` folder.
-
-    | Depth Predictor   |  SML on VOID 150  |  SML on VOID 500  | SML on VOID 1500 |
-    | :---              |       :----:      |       :----:      |      :----:      |
-    | DPT-BEiT-Large    | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_beit_large_512.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_beit_large_512.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_beit_large_512.nsamples.1500.ckpt) |
-    | DPT-SwinV2-Large  | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_large_384.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_large_384.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_large_384.nsamples.1500.ckpt) |
-    | DPT-Large         | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_large.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_large.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_large.nsamples.1500.ckpt) |
-    | DPT-Hybrid        | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_hybrid.nsamples.150.ckpt)* | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_hybrid.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_hybrid.nsamples.1500.ckpt) |
-    | DPT-SwinV2-Tiny   | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_tiny_256.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_tiny_256.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_swin2_tiny_256.nsamples.1500.ckpt) |
-    | DPT-LeViT         | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_levit_224.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_levit_224.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_levit_224.nsamples.1500.ckpt) |
-    | MiDaS-small       | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.midas_small.nsamples.150.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.midas_small.nsamples.500.ckpt) | [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.midas_small.nsamples.1500.ckpt) |
-
-    *Also available with pretraining on TartanAir: [model](https://github.com/isl-org/VI-Depth/releases/download/v1/sml_model.dpredictor.dpt_hybrid.nsamples.150.pretrained.ckpt)
 
     Results for the example shown above:
 
