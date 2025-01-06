@@ -84,7 +84,7 @@ All models are trained on a single GeForce GTX 1080 Ti GPU with the largest poss
 
 | Degradation type            | Models           | Params | Performance |
 |-----------------------------|:-------:|:-------:|:-------:|
-| Simulated random (90%)      | [GAN-RM(90%)](https://www.dropbox.com/scl/fi/ce2wxefifs4vf1gkwdmmb/DC_chk_90.t7?rlkey=uadjku5hqdkb1gs0fmfoac1je&st=pxuj4j5o&dl=1) | 1.45M | 33.70 dB [PSNR/Middlebury]                                                     |
+| Simulated random (90%)      | [GAN-RM(90%)](https://www.dropbox.com/scl/fi/ce2wxefifs4vf1gkwdmmb/DC_chk_90.t7?rlkey=uadjku5hqdkb1gs0fmfoac1je&st=pxuj4j5o&dl=1) | 1.45M | 33.70 dB [PSNR/[Middlebury](https://www.cs.middlebury.edu/~schar/papers/datasets-gcpr2014.pdf)]                                                     |
 | Real Kinect depth map holes | [GAN-Real](https://www.dropbox.com/scl/fi/12nmxojuljmwk8km39jmc/DC_chk_Real.t7?rlkey=vgqcf8o00orsguab34lsgb2bq&st=i23va6n7&dl=1)     | 1.81M | 40.77 dB [PSNR/K_deg], 1.54m [RMSE/[Matterport3D-500](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8374622)], 1.49m [RMSE/[Matterport3D-474](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8374622)]|
 
 
