@@ -242,17 +242,15 @@ Other options:
 
 For example:
 
+
 ### Demo
-### Demo
-If you want to run  quick demos for depth completion corresponding to the two cases of our depth degradations: 90% random missing depth values and real Kinect depth degradation:
-restoration tasks, please download our pre-trained models using the following script.
+If you want to run  quick demos for depth completion corresponding to the two cases of our depth degradations: 90% random missing depth values and real Kinect depth degradation, please download our pre-trained models using the following script.
  
-All models are trained on a single GeForce GTX 1080 Ti GPU with
-the largest possible batch size to ensure efficient computational resources.....check this line.........confirm this.............
+All models are trained on a single GeForce GTX 1080 Ti GPU with the largest possible batch size.
 
 | Degradation type            | Models           | Params | Performance |
 |-----------------------------|:-------:|:-------:|:-------:|
-| Simulated random (90%)      | [GAN-RM(90%)] (https://www.dropbox.com/scl/fi/wv4fl50qvqjxxw14ge0zl/DC_chk_90.t7?rlkey=9b6pet4fgrp43td5kvpk20iyb&st=dhy7wshq&dl=1) | 1.45M | 33.70 dB [PSNR/Middlebury]                                                     |
+| Simulated random (90%)      | [GAN-RM(90%)](https://www.dropbox.com/scl/fi/ce2wxefifs4vf1gkwdmmb/DC_chk_90.t7?rlkey=uadjku5hqdkb1gs0fmfoac1je&st=pxuj4j5o&dl=1) | 1.45M | 33.70 dB [PSNR/Middlebury]                                                     |
 | Real Kinect depth map holes | [GAN-Real](https://www.dropbox.com/scl/fi/12nmxojuljmwk8km39jmc/DC_chk_Real.t7?rlkey=vgqcf8o00orsguab34lsgb2bq&st=i23va6n7&dl=1)     | 1.81M | 40.77 dB [PSNR/K_deg], 1.54m [RMSE/Matterport-500], 1.49m [RMSE/Matterport-474]|
 
 
