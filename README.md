@@ -178,73 +178,10 @@ Train the model
   cd denoising
   DATA_ROOT=../dataset/my_train_set name=denoise niter=1500 loadSize=96 fineSize=64 display=1 display_iter=50 gpu=1 th train.lua
   ```
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  ```Shell
-  DATA_ROOT=dataset/train display_id=11 name=inpaintCenter overlapPred=4 wtl2=0.999 nBottleneck=4000 niter=500 loadSize=350 fineSize=128 gpu=1 th train.lua
-  ```
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  net=models/inpaintCenter/paris_inpaintCenter.t7 name=paris_result imDir=images/paris overlapPred=4 manualSeed=222 batchSize=21 gpu=1 th demo.lua
-  net=models/inpaintCenter/imagenet_inpaintCenter.t7 name=imagenet_result imDir=images/imagenet overlapPred=0 manualSeed=222 batchSize=21 gpu=1 th demo.lua
-  net=models/inpaintCenter/paris_inpaintCenter.t7 name=ucberkeley_result imDir=images/ucberkeley overlapPred=4 manualSeed=222 batchSize=4 gpu=1 th demo.lua
-### Inference
-1. Complete your images. You may want to choose another dataset to avoid completing images you used for training.
-```
-DATA_ROOT=<dataset_folder> name=<whatever_name_you_want> net=<prefix_of_net_in_checkpoints> th inpainting.lua
-```
-*Example:*
-```
-DATA_ROOT=celebA noise=normal net=celebA-normal name=inpainting-celebA display=2929 th inpainting.lua
-```
-### Display images in a browser
-
-If you want, install the `display` package (`luarocks install display`) and run
-```
-th -ldisplay.start <PORT_NUMBER> 0.0.0.0
-```
-to launch a server on the port you chose. You can access it in your browser with the url http://localhost:PORT_NUMBER.
-
-To train your network or for completion add the variable `display=<PORT_NUMBER>` to the list of options.
-
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- [Optional] Install the Display Package, which enables you to track the training progress. If you don't want to install it, please set `display=0` in `train.lua`.
-  ```Shell
-  luarocks install https://raw.githubusercontent.com/szym/display/master/display-scm-0.rockspec
-  #start the display server
-  th -ldisplay.start 8000
-  # on client side, open in browser: http://localhost:8000/
-  # You can then see the training progress in your browser window.
-  ```
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Install Display Package as follows. If you don't want to install it, then set `display=0` in `train.lua`.
-  ```Shell
-  luarocks install https://raw.githubusercontent.com/szym/display/master/display-scm-0.rockspec
-  cd ~
-  th -ldisplay.start 8000
-  # if working on server machine create tunnel: ssh -f -L 8000:localhost:8000 -N server_address.com
-  # on client side, open in browser: http://localhost:8000/
-  ```
-### Optional parameters
-
-In your command line instructions you can specify several parameters (for example the display port number), here are some of them:
-+ `noise` which can be either `uniform` or `normal` indicates the prior distribution from which the samples are generated
-+ `batchSize` is the size of the batch used for training or the number of images to reconstruct
-+ `name` is the name you want to use to save your networks or the generated images
-+ `gpu` specifies if the computations are done on the GPU or not. Set it to 0 to use the CPU (not recommended, see below) and to n to use the nth GPU you have (1 is the default value)
-+ `lr` is the learning rate
-+ `loadSize` is the size to use to scale the images. 0 means no rescale
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Other options:
-
-- `--model`: Model to be used. Defaults to 'completionnet_places2_freeform.t7'.
-- `--gpu`: Use GPU for the computation. [cunn](https://github.com/torch/cunn) is required to use this option. Defaults to false.
-- `--maxdim`: Long edge dimension of the input image. Defaults to 600.
-- `--postproc`: Perform the post-processing. Defaults to false. If you fail to install the `torch-opencv`, do not use this option to avoid using the package.
-
-For example:
-
-
+ 
+ 
 ### Demo
-If you want to run  quick demos for depth completion corresponding to the two cases of our depth degradations: 90% random missing depth values and real Kinect depth degradation, please download our pre-trained models using the following script.
+If you want to run  quick demos for depth completion corresponding to the two cases of our depth degradations: 90% random missing depth values and real Kinect depth degradation, please download our pre-trained models.
  
 All models are trained on a single GeForce GTX 1080 Ti GPU with the largest possible batch size.
 
@@ -256,69 +193,14 @@ All models are trained on a single GeForce GTX 1080 Ti GPU with the largest poss
 
 Download and save the `pretrained model(s)` to `./chk`.
 
-check the belowwwwww..............................................
   ```Shell
-  # Test the image inpainting model on various corruption levels
-  cd inpainting
-  DATA_ROOT=../dataset/my_test_set name=inpaint_demo net=../models/inpainting_net_G.t7 manualSeed=333 gpu=1 display=1 th demo.lua
-  # Demo results saved as inpaint_demo.png
+ # Test the depth completion model for 90% randomly missing depth values
+ th test_realKinectholes.lua
+
+# Test the depth completion model for real Kinect holes
+ th test_randommissing.lua
   ```
-
-  Demo
-  ```Shell
-  # Test the depth completion model for  90% randomly missing depth values
-  DATA_ROOT=../dataset/my_test_set name=deblur_demo net=../models/deblurring_net_G.t7 manualSeed=333 gpu=1 display=1 th demo.lua
-  # Demo results saved as deblur_demo.png
-  ```
-xxxxxxxxxxxxxxxxxxxxxxx
- Demo
-  ```Shell
-  # Test the image denoising model on various corruption levels
-  cd deblurring
-  DATA_ROOT=../dataset/my_test_set name=denoise_demo net=../models/denoising_net_G.t7 sigma=25 manualSeed=333 gpu=1 display=1 th demo.lua
-  # Demo results saved as denoise_demo.png
-  ```
-xxxxxxxxxxxxxxxxxxxxxxxx
-Image Denoising of Arbitrary Sizes
-Denoising/DB11 contains 11 classic images commonly used to evaluate image denoising algorithms. Because the input of our network is of size 64 x 64, given an image of arbitrary size (assuming larger than 64 x 64), we use a sliding-window approach to denoise each patch separately, then average outputs at overlapping pixels.
-  ```Shell
-  # Denoise classic image Lena from DB11 dataset
-  cd denoise_anysize
-  img_path=DB11/Lena.png name=denoise net=../models/denoise_anysize_net_G.t7 sigma=25 stepSize=3 gpu=1 th denoise.lua
-  # Denoising results saved as denoise.png
-  ```
-
-xxxxxxxxxxxxxxxxxxxxxxxx
-
-```
-th inpaint.lua --input example.png --mask example_mask.png
-```
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  ```Shell
-  # you can either use demo.lua to display the result or use test.lua using following commands:
-  DATA_ROOT=dataset/val net=checkpoints/inpaintCenter_500_net_G.t7 name=test_patch overlapPred=4 manualSeed=222 batchSize=30 loadSize=350 gpu=1 th test.lua
-  DATA_ROOT=dataset/val net=checkpoints/inpaintCenter_500_net_G.t7 name=test_full overlapPred=4 manualSeed=222 batchSize=30 loadSize=129 gpu=1 th test.lua
-  ```
-
-## Benchmark
-
-
-    Results for the example shown above:
-
-    ```
-    Averaging metrics for globally-aligned depth over 800 samples
-    Averaging metrics for SML-aligned depth over 800 samples
-    +---------+----------+----------+
-    |  metric | GA Only  |  GA+SML  |
-    +---------+----------+----------+
-    |   RMSE  |  191.36  |  142.85  |
-    |   MAE   |  115.84  |   76.95  |
-    |  AbsRel |    0.069 |    0.046 |
-    |  iRMSE  |   72.70  |   57.13  |
-    |   iMAE  |   49.32  |   34.25  |
-    | iAbsRel |    0.071 |    0.048 |
-    +---------+----------+----------+
-    ```
+    
 ## 📜 License
 This project is licensed under the The MIT License (MIT).
 
