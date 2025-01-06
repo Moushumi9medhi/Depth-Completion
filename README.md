@@ -77,7 +77,31 @@ Clone the repository
   git clone https://github.com/Moushumi9medhi/Depth-Completion.git
   cd Depth-Completion
   ```
+### Demo
+If you want to run  quick demos for depth completion corresponding to the two cases of our depth degradations: 90% random missing depth values and real Kinect depth degradation, please download our pre-trained models.
+ 
+All models are trained on a single GeForce GTX 1080 Ti GPU with the largest possible batch size.
 
+| Degradation type            | Models           | Params | Performance |
+|-----------------------------|:-------:|:-------:|:-------:|
+| Simulated random (90%)      | [GAN-RM(90%)](https://www.dropbox.com/scl/fi/ce2wxefifs4vf1gkwdmmb/DC_chk_90.t7?rlkey=uadjku5hqdkb1gs0fmfoac1je&st=pxuj4j5o&dl=1) | 1.45M | 33.70 dB [PSNR/Middlebury]                                                     |
+| Real Kinect depth map holes | [GAN-Real](https://www.dropbox.com/scl/fi/12nmxojuljmwk8km39jmc/DC_chk_Real.t7?rlkey=vgqcf8o00orsguab34lsgb2bq&st=i23va6n7&dl=1)     | 1.81M | 40.77 dB [PSNR/K_deg], 1.54m [RMSE/Matterport3D-500], 1.49m [RMSE/Matterport3D-474]|
+
+
+The entries in the **Performance** column specify the evaluation metric followed by the dataset used for testing, as indicated inside the brackets. For example, in "PSNR/Middlebury," the first part refers to the evaluation metric, in this case, PSNR (Peak Signal-to-Noise Ratio), while the second part specifies the dataset, Middlebury dataset. Similarly, "PSNR/K_deg" refers to the PSNR metric evaluated on a dataset with structural Kinect-like degradation. Metrics such as RMSE (Root Mean Square Error) followed by datasets like Matterport-500 and Matterport-474 indicate RMSE values measured in meters for the respective subsets of the Matterport3D dataset. This format ensures that both the metric and the dataset used are clearly associated in each entry.
+
+
+Download and save the `pretrained model(s)` to `./chk`.
+
+  ```Shell
+ # Test the depth completion model for 90% randomly missing depth values
+ th test_realKinectholes.lua
+
+# Test the depth completion model for real Kinect holes
+ th test_randommissing.lua
+
+# Note: If you are running on cpu, use gpu=0
+  ```
 ### Training
 1. Choose a RGB-Depth dataset and create a folder with its name (ex: `mkdir celebA`). Inside this folder create a folder `images` containing your images.  .....swee how training  image folder was created...............check this........not right.....
 
@@ -180,26 +204,7 @@ Train the model
   ```
  
  
-### Demo
-If you want to run  quick demos for depth completion corresponding to the two cases of our depth degradations: 90% random missing depth values and real Kinect depth degradation, please download our pre-trained models.
- 
-All models are trained on a single GeForce GTX 1080 Ti GPU with the largest possible batch size.
 
-| Degradation type            | Models           | Params | Performance |
-|-----------------------------|:-------:|:-------:|:-------:|
-| Simulated random (90%)      | [GAN-RM(90%)](https://www.dropbox.com/scl/fi/ce2wxefifs4vf1gkwdmmb/DC_chk_90.t7?rlkey=uadjku5hqdkb1gs0fmfoac1je&st=pxuj4j5o&dl=1) | 1.45M | 33.70 dB [PSNR/Middlebury]                                                     |
-| Real Kinect depth map holes | [GAN-Real](https://www.dropbox.com/scl/fi/12nmxojuljmwk8km39jmc/DC_chk_Real.t7?rlkey=vgqcf8o00orsguab34lsgb2bq&st=i23va6n7&dl=1)     | 1.81M | 40.77 dB [PSNR/K_deg], 1.54m [RMSE/Matterport-500], 1.49m [RMSE/Matterport-474]|
-
-
-Download and save the `pretrained model(s)` to `./chk`.
-
-  ```Shell
- # Test the depth completion model for 90% randomly missing depth values
- th test_realKinectholes.lua
-
-# Test the depth completion model for real Kinect holes
- th test_randommissing.lua
-  ```
     
 ## 📜 License
 This project is licensed under the The MIT License (MIT).
@@ -559,25 +564,15 @@ mmmmmmmmmmmmmmmmmmmmmmmmmm start
 
 
 
-### Contents
-1. [Semantic Inpainting Demo](#1-semantic-inpainting-demo)
+
 2. [Train Context Encoders](#2-train-context-encoders)
 3. [Download Features Caffemodel](#3-download-features-caffemodel)
 4. [TensorFlow Implementation](#4-tensorflow-implementation)
 5. [Project Website](#5-project-website)
 6. [Download Dataset](#6-paris-street-view-dataset)
 
-### 1) Semantic Inpainting Demo
 
 
-
-
-  net=models/inpaintCenter/paris_inpaintCenter.t7 name=paris_result imDir=images/paris overlapPred=4 manualSeed=222 batchSize=21 gpu=1 th demo.lua
-  net=models/inpaintCenter/imagenet_inpaintCenter.t7 name=imagenet_result imDir=images/imagenet overlapPred=4 manualSeed=222 batchSize=21 gpu=1 th demo.lua
-  net=models/inpaintCenter/paris_inpaintCenter.t7 name=ucberkeley_result imDir=images/ucberkeley overlapPred=4 manualSeed=222 batchSize=4 gpu=1 th demo.lua
-  # Note: If you are running on cpu, use gpu=0
-  # Note: samples given in ./images/* are held-out images
-  ```
 
 ### 2) Train Context Encoders
 
