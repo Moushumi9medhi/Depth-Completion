@@ -33,7 +33,7 @@ Depth map completion without guidance from color images is a challenging, ill-po
 - Generalization capability across various indoor depth datasets without additional fine-tuning.
 - Adaptable to existing works, supporting diverse computer vision applications.
 
-![](https://github.com/Moushumi9medhi/STRUCTURAL-HEALTH-MONITORING-SHM-/blob/main/teaser/test1024-08-07-16-37-15.gif)
+![](https://github.com/Moushumi9medhi/Depth-Completion/blob/main/assets/DC_app_AR.gif)
 
 ## :hammer_and_wrench: Installation and Running
 ### 💻 Prerequisites
