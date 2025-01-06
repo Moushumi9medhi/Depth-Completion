@@ -98,10 +98,10 @@ Download and save the `pretrained model(s)` to `./chk`.
 Execute the testing script from the command line:
   
   ```Shell
- # Test the depth completion model for 90% randomly missing depth values
+# Test the depth completion model for real Kinect holes
  th test_realKinectholes.lua
 
-# Test the depth completion model for real Kinect holes
+# Test the depth completion model for 90% randomly missing depth values
  th test_randommissing.lua
 
 # Note: If you are running on cpu, use gpu=0
