@@ -137,7 +137,7 @@ We thank the anonymous reviewers for their constructive reviews.
 Some part of the training code is adapted from an initial fork of [Soumith's DCGAN](https://github.com/soumith/dcgan.torch) implementation. We'd like to thank the authors for making these frameworks available.
 
 ## 📜 License
-This project is licensed under the The MIT License (MIT).
+This project is licensed under The MIT License (MIT).
 
 ---
 Feel free to reach out [✉️](mailto:medhi.moushumi@gmail.com) if you encounter any issues!
