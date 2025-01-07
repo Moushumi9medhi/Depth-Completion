@@ -4,16 +4,14 @@
 [![Depth Completion](link)](#)
 -->
 <p align="center">
-  kkkkkkkkkkkk
+
   <h1 align="center">
-  <a href="https://link_to_your_article.com" target="_blank" style="text-decoration: none; color: inherit;">
+  <a href="https://link.springer.com/article/10.1007/s00138-024-01652-x" target="_blank" style="text-decoration: none; color: inherit;">
     <img src="assets/DC.png" width="85">
     <br>Adversarial Learning for Unguided Single Depth Map Completion of Indoor Scenes
   </a>
 </h1>
 
-  kkkkkkkkkkkk
-  <h1 align="center"><img src="assets/DC.png" width="85"></ins><br>Adversarial Learning for Unguided Single Depth Map Completion of Indoor Scenes</h1>
   <p align="center">
     <a href="#">Moushumi&nbsp;Medhi*</a>
     ·
