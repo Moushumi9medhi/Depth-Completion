@@ -139,6 +139,7 @@ Some part of the training code is adapted from an initial fork of [Soumith's DCG
 ## 📜 License
 This project is licensed under the MIT License (MIT).
 
+
 ---
 Feel free to reach out [✉️](mailto:medhi.moushumi@gmail.com) if you encounter any issues!
 
