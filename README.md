@@ -4,7 +4,7 @@
 [![Depth Completion](link)](#)
 -->
 <p align="center">
-  <h1 align="center"><img src="assets/DC.png" width="85"></ins><br>[Adversarial Learning for Unguided Single Depth Map Completion of Indoor Scenes](https://link.springer.com/article/10.1007/s00138-024-01652-x)</h1>
+  <h1 align="center"><img src="assets/DC.png" width="85"></ins><br>Adversarial Learning for Unguided Single Depth Map Completion of Indoor Scenes</h1>
   <p align="center">
     <a href="#">Moushumi&nbsp;Medhi*</a>
     ·
