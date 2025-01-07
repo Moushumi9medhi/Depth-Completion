@@ -4,7 +4,7 @@
 [![Depth Completion](link)](#)
 -->
 <p align="center">
-  <h1 align="center"><img src="assets/DC.png" width="85"></ins><br>Adversarial Learning for Unguided Single Depth Map Completion of Indoor Scenes</h1>
+  <h1 align="center"><img src="assets/DC.png" width="85"></ins><br>[Adversarial Learning for Unguided Single Depth Map Completion of Indoor Scenes](https://link.springer.com/article/10.1007/s00138-024-01652-x)</h1>
   <p align="center">
     <a href="#">Moushumi&nbsp;Medhi*</a>
     ·
@@ -107,7 +107,21 @@ We used the :floppy_disk:[NYU-Depth V2](https://cs.nyu.edu/~fergus/datasets/nyu_
 ```
 ## 🎓 BibTeX Citation
 
-The BibTeX citation will be provided soon.
+```
+@Article{Medhi2025,
+author={Medhi, Moushumi and Ranjan Sahay, Rajiv},
+title={Adversarial learning for unguided single depth map completion of indoor scenes},
+journal={Machine Vision and Applications},
+year={2025},
+volume={36},
+number={2},
+pages={30},
+issn={1432-1769},
+doi={10.1007/s00138-024-01652-x},
+url={https://doi.org/10.1007/s00138-024-01652-x}
+}
+
+```
 
 
 ## 🙏 Acknowledgement
